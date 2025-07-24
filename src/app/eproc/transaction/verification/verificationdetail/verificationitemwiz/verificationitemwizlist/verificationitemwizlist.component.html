@@ -1,0 +1,57 @@
+<div class="main-content margin-wizard-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <div class="toolbar">
+          <!--#region button save-->
+          <button class="btn btn-info btn-round" (click)="btnSaveList()" data-role="R00021530002153C"
+            [hidden]="this.tampHiddenStatus">
+            Save
+          </button>
+          <button hidden id="verifdetailwiz" type="button" (click)="callGetrowHeader()"></button>
+          <!--#endregion button save-->
+        </div>
+
+        <!--#region list view-->
+        <table id="datatableitem" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="disabled-sorting">No</th>
+              <th style="display: none;"></th>
+              <th>Item Name</th>
+              <th>QTY Request</th>
+              <th>QTY Approved</th>
+              <th>UOM</th>
+              <th>Specification</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listrequestitem; let i=index;">
+              <td style="text-align: center;" style="text-align: center;">{{listrequestitem.numberIndex+i+1}}</td>
+              <td class="disabled-sorting" style="display: none;"></td>
+              <td style="width: 20%;">{{row.item_name}}</td>
+              <td style="width: 10%; text-align: right">{{row.quantity_request}}</td>
+              <td style="width: 10%; text-align: right">
+                <div class="form-group">
+                  <input type="hidden" value="{{row.id}}" name="p_id">
+                  <input type="int" class="form-control" [readonly]="this.tampHiddenStatus" id="approved_quantity{{i}}"
+                    type="text" value="{{row.approved_quantity}}" style="text-align: right" name="p_approved_quantity">
+                </div>
+              </td>
+              <td style="width: 10%; text-align: center">{{row.uom_name}}</td>
+              <td style="width: 20%;">{{row.specification}}</td>
+              <td style="width: 30%;">{{row.remark}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

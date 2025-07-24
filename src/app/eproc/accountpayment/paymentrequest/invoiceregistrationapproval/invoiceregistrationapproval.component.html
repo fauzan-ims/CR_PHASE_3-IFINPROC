@@ -1,0 +1,821 @@
+<div class="main-content" style="overflow-y:scroll; overflow-x:hidden;height:100%;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="card-header">
+        <h5 class="card-title">Invoice Registration Info</h5>
+      </div>
+      <div class="card-body">
+          <!--#region div-->
+          <div class="row">
+            <!--#region code-->
+            <div class="col-md-4">
+              <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                  Generate-</h1>
+              </div>
+              <div [hidden]="model.code == null" class="form-group">
+                <label>Code</label>
+                <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+              </div>
+            </div>
+            <!--#endregion code-->
+
+            <!--#region company_code-->
+            <input type="text" class="form-control" [ngModel]="model.company_code" maxlength="50" name="p_company_code"
+              #company_code="ngModel" hidden>
+            <!--#endregion company_code-->
+
+            <!--#region supplier_code-->
+            <div class="col-md-4">
+              <label class="labelmodule">Supplier </label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupVendor()" data-target="#lookupModalVendor" data-toggle="modal" href="#"
+                      [disabled]="this.param != null">
+                      <i class="fa fa-search-plus"></i></button> {{model.supplier_name}}
+                    <input type="hidden" name="p_supplier_code" [ngModel]="model.supplier_code" 
+                      #supplier_code="ngModel" />
+                    <input type="hidden" name="p_supplier_name" [ngModel]="model.supplier_name"
+                      #supplier_name="ngModel" />
+                    <input type="hidden" name="p_supplier_address" [ngModel]="model.supplier_address"
+                      #supplier_address="ngModel" />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--#endregion supplier_code-->
+
+            <!--#region status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="status" class="control-label">Status</label>
+                <input maxlength="20" type="text" class="form-control" [ngModel]="model.status" name="p_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion status-->
+
+            <!--#region purchase_order_code-->
+            <div class="col-md-4" hidden>
+              <label class="control-label">Purchase Order </label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupPO()" data-target="#lookupModalPO" data-toggle="modal" href="#"
+                      [disabled]="this.tampHidden">
+                      <i class="fa fa-search-plus"></i></button> {{model.purchase_order_code}} - {{ model.unit_from }}
+                    <input type="hidden" name="p_purchase_order_code" [ngModel]="model.purchase_order_code"
+                      #purchase_order_code="ngModel" />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--#endregion purchase_order_code-->
+
+            <!--#region branch_code-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="branch_code" class="control-label">Branch</label>
+                <input type="hidden" name="p_branch_code" [ngModel]="model.branch_code" maxlength="50"
+                  #branch_code="ngModel" />
+                <input type="text" class="form-control" [ngModel]="model.branch_name" maxlength="250"
+                  name="p_branch_name" #branch_name="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion branch_code-->
+
+            <!--#region supplier_name-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="supplier_name" class="control-label">Supplier</label>
+                <input type="hidden" class="form-control" [ngModel]="model.supplier_code" maxlength="50"
+                  name="p_supplier_code" #supplier_code="ngModel">
+                <input type="text" class="form-control" [ngModel]="model.supplier_name" maxlength="250"
+                  name="p_supplier_name" #supplier_name="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion supplier_name-->
+
+            <!--#region radio button bill_type-->
+            <div class="col-md-4" hidden>
+              <label>Bill Type</label>
+              <div class="form-group col-md-12">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input [disabled]="this.tampHidden" class="form-check-input" type="radio" name="p_bill_type"
+                        value="PO" [(ngModel)]="model.bill_type">PO
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input [disabled]="this.tampHidden" class="form-check-input" type="radio" name="p_bill_type"
+                        value="OTHER" [(ngModel)]="model.bill_type">OTHER
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input [disabled]="this.tampHidden" class="form-check-input" type="radio" name="p_bill_type"
+                        value="PO TERMIN" [(ngModel)]="model.bill_type">PO TERMIN
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button bill_type-->
+
+            <!--#region Invoice Date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="invoice_date" class="control-label">Invoice Received Date </label>
+                <div>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.invoice_date" name="p_invoice_date" [options]="myDatePickerOptions" 
+                    #p_invoice_date="ngModel" #invoice_date="angular-mydatepicker" autocomplete="off"
+                    (click)="invoice_date.toggleCalendar()" [ngStyle]="getStyles(tampHidden)"
+                    [readonly]="this.tampHidden || param !== null"/>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Invoice Date-->
+
+            <!--#region Due Date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="due_date" class="control-label">Due Date </label>
+                <div>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.due_date" name="p_due_date" [options]="myDatePickerOptions" 
+                    #p_due_date="ngModel" #due_date="angular-mydatepicker" autocomplete="off"
+                    (click)="due_date.toggleCalendar()" [ngStyle]="getStyles(tampHidden)"
+                    [readonly]="this.tampHidden || param !== null"/>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Due Date-->
+
+            <!--#region Tax Invoice Date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="tax_invoice_date" class="control-label">Tax Invoice Date </label>
+                <div>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.tax_invoice_date" name="p_tax_invoice_date" [options]="myDatePickerOptions"
+                    #p_tax_invoice_date="ngModel" #tax_invoice_date="angular-mydatepicker" autocomplete="off"
+                    (click)="tax_invoice_date.toggleCalendar()" [ngStyle]="getStyles(tampHidden)"
+                    [readonly]="this.tampHidden || param !== null"/>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Tax Invoice Date-->
+
+            <!--#region file_invoice_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>File Invoice No </label>
+                <input type="text" class="form-control" [ngModel]="model.file_invoice_no"
+                  #file_invoice_no="ngModel" name="p_file_invoice_no" [readonly]="this.tampHidden || param !== null">
+              </div>
+            </div>
+            <!--#endregion file_invoice_no-->
+
+            <!--#region unit price-->
+            <div class="col-md-4" hidden>
+              <div class="form-group" [class.has-error]="unit_price.invalid && unit_price.touched">
+                <label for="unit_price" class="control-label">Unit Price</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="unit_price"
+                  maxlength="24" [ngModel]="model.unit_price | number : '1.2-2'" name="p_unit_price"
+                  #unit_price="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion unit price-->
+
+            <!--#region is_another_invoice-->
+            <!-- <div class="col-md-4">
+              <div class="form-check mt-3" style="margin-left: -35px;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_another_invoice"
+                      name="p_is_another_invoice">
+                    Another Invoice
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div> -->
+            <!--#endregion is_another_invoice-->
+
+            <!--#region is_another_invoice-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>New Purchase </label>
+                <select id="is_another_invoice" class="form-control col-md-6" [ngModel]="model.is_another_invoice"
+                  name="p_is_another_invoice" (change)="PageStatusType($event, model.item_type_code)"
+                  [disabled]="this.tampStatus">
+                  <option value='YES'>YES</option>
+                  <option value='NO'>NO</option>
+                </select>
+              </div>
+            </div> -->
+            <!--#endregion is_another_invoice-->
+
+            <!--#region discount-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="discount.invalid && discount.touched">
+                <label for="discount" class="control-label">Discount Amount</label>
+                <input type="text" readonly class="form-control col-md-6" style="text-align: right;" amount="discount"
+                  maxlength="24" [ngModel]="model.discount | number : '1.2-2'" name="p_discount" #discount="ngModel">
+              </div>
+            </div>
+            <!--#endregion discount-->
+
+            <!--#region ppn-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="ppn.invalid && ppn.touched">
+                <label for="ppn" class="control-label">PPN Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="ppn" maxlength="24"
+                  [ngModel]="model.ppn | number : '1.2-2'" name="p_ppn" #ppn="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion ppn-->
+
+            <!--#region pph-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="pph.invalid && pph.touched">
+                <label for="pph" class="control-label">PPH Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="pph" maxlength="24"
+                  [ngModel]="model.pph | number : '1.2-2'" name="p_pph" #pph="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion pph-->
+
+            <!--#region invoice_amount-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="invoice_amount.invalid && invoice_amount.touched">
+                <label for="invoice_amount" class="control-label">Total Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="invoice_amount"
+                  maxlength="24" [ngModel]="model.invoice_amount | number : '1.2-2'" name="p_invoice_amount"
+                  #invoice_amount="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion invoice_amount-->
+
+            <!--#region division_code-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="division_code" class="control-label">Division</label>
+                <input type="hidden" name="p_division_code" [ngModel]="model.division_code" maxlength="50"
+                  #division_code="ngModel" />
+                <input type="text" class="form-control" [ngModel]="model.division_name" maxlength="250"
+                  name="p_division_name" #division_name="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion division_code-->
+
+            <!--#region department_code-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="department_code" class="control-label">Department</label>
+                <input type="hidden" name="p_department_code" [ngModel]="model.department_code" maxlength="50"
+                  #department_code="ngModel" />
+                <input type="text" class="form-control" [ngModel]="model.department_name" maxlength="250"
+                  name="p_department_name" #department_name="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion department_code-->
+
+            <!--#region faktur_no-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="faktur_no" class="control-label" [hidden]="model.ppn == 0">Faktur No </label>
+                <label for="faktur_no" class="control-label" [hidden]="model.ppn != 0">Faktur No</label>
+                <!-- <label>Faktur No</label> -->
+                <input type="text" class="form-control" [ngModel]="model.faktur_no" #faktur_no="ngModel" maxlength="16"
+                  name="p_faktur_no" [readonly]="this.tampHidden"
+                  pattern={{NumberOnlyPattern}}>
+              </div>
+            </div>
+            <!--#endregion faktur_no-->
+
+            <!--#region remark-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+                <label for="remark" class="control-label">Remark </label>
+                <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark" maxlength="4000"
+                  #remark="ngModel" [disabled]="this.tampHidden || param !== null"></textarea>
+              </div>
+            </div>
+            <!--#endregion remark-->
+
+            <!--#region shipping_fee-->
+            <div class="col-md-4" hidden>
+              <div class="form-group" [class.has-error]="shipping_fee.invalid && shipping_fee.touched">
+                <label for="shipping_fee" class="control-label">Shipping Fee </label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="shipping_fee"
+                  maxlength="24" [ngModel]="model.shipping_fee | number : '1.2-2'" name="p_shipping_fee"
+                  #shipping_fee="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion shipping_fee-->
+          </div>
+          <!--#endregion div-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+
+          <h5>Payment Instruction</h5>
+
+          <!--#region div-->
+          <div class="row">
+            <!--#region to_bank_code-->
+            <div class="col-md-4">
+              <label class="labelmodule">To Bank </label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupBank()" data-target="#lookupModalBank" data-toggle="modal" href="#"
+                      [disabled]="this.tampHidden || param !== null">
+                      <i class="fa fa-search-plus"></i></button>
+                    {{model.to_bank_name}}
+                    <input type="hidden" name="p_to_bank_code" [ngModel]="model.to_bank_code" 
+                      #to_bank_code="ngModel" />
+                    <input type="hidden" name="p_to_bank_name" [ngModel]="model.to_bank_name" #to_bank_name="ngModel" />
+                    <input type="hidden" name="p_to_bank_account_no" [ngModel]="model.to_bank_account_no"
+                      #to_bank_account_no="ngModel" />
+                    <input type="hidden" name="p_to_bank_account_name" [ngModel]="model.to_bank_account_name"
+                      #to_bank_account_name="ngModel" />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--#endregion to_bank_code-->
+
+            <!--#region to_bank_code-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>To Bank Code</label>
+                <input type="text" class="form-control" [ngModel]="model.to_bank_code" #to_bank_code="ngModel"
+                  name="p_to_bank_code" readonly>
+              </div>
+            </div> -->
+            <!--#endregion to_bank_code-->
+
+            <!--#region to_bank_account_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>To Bank Account No</label>
+                <input type="text" class="form-control" [ngModel]="model.to_bank_account_no"
+                  #to_bank_account_no="ngModel" name="p_to_bank_account_no" readonly>
+              </div>
+            </div>
+            <!--#endregion to_bank_account_no-->
+
+            <!--#region to_bank_account_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>To Bank Account Name</label>
+                <input type="text" class="form-control" [ngModel]="model.to_bank_account_name"
+                  #to_bank_account_name="ngModel" name="p_to_bank_account_name" readonly>
+              </div>
+            </div>
+            <!--#endregion to_bank_account_name-->
+
+            <!--#region currency_code-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="currency_code" class="control-label">Currency</label>
+                <input type="text" class="form-control" [ngModel]="model.currency_code" maxlength="250"
+                  name="p_currency_code" #currency_code="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion currency_code-->
+
+            <!--#region payment_by-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label>Payment By</label>
+                <input type="text" class="form-control" [ngModel]="model.payment_by" #payment_by="ngModel"
+                  name="p_payment_by" readonly>
+              </div>
+            </div>
+            <!--#endregion payment_by-->
+
+            <!--#region file name-->
+            <div class="col-md-4" [hidden]="this.model.code == null">
+              <div class="form-group row" style="margin-left: 30px;">
+                <label>File Invoice</label>
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <!-- <div [hidden]="this.tampHidden == true"> -->
+                  <div [hidden]="model.file_name == '' || model.file_name == null">
+                    <span>
+                      <!-- <a class="btn btn-danger btn-round btn-file " type="button" [hidden]="model.status !== 'HOLD'"
+                        (click)="deleteImage(model.file_name, model.paths)">
+                        <span><i class="fa fa-trash"></i></span></a> -->
+                      <a class="btn btn-primary btn-round btn-file " type="button"
+                        (click)="previewFile(model.file_name, model.paths)">
+                        <span><i class="fa fa-eye"></i></span></a>
+                    </span>
+                    <div>{{model.file_name}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion file name-->
+
+          </div>
+          <!--#endregion div-->
+      </div>
+      <span layout="row horizontal-divider">
+        <hr flex />
+      </span>
+      <!--#region list view-->
+      <div *ngIf="param != null" class="row">
+        <div class="col-md-12">
+          <div class="card-header">
+            <h5 class="card-title">Item List</h5>
+          </div>
+          <div class="card-body">
+
+            <!--#region list view-->
+            <table id="datatablesWizItem" datatable [dtOptions]="dtOptions"
+              class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                          (change)="selectAll()" name="selectAll" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>GRN Code/ Item</th>
+                  <th>PO No</th>
+                  <th>QTY</th>
+                  <th>Plat/ Engine/ Chasis/ Faktur </th>
+                  <th>Unit Price/ Discount Amount (Unit) / Nett Amount</th>
+                  <th>PPN /PPH / Total Amount</th>
+                  <th>Spesification</th>
+                  <th style="text-align: center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of invoiceRegisterDetailList;let i = index">
+                  <td style="text-align: center">{{ invoiceRegisterDetailList.numberIndex + i + 1 }}</td>
+                  <td class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected" name="selected"
+                          (change)="checkIfAllTableSelected($event, row.id)" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="text-align: left; width: 15%"> {{ row.grn_code }} <br> {{ row.item_name}}</td>
+                  <td style="text-align: left; width: 15%"> {{ row.po_code}} </td>
+                  <td style="text-align: center; width: 10%"> {{ row.quantity}} <br> {{ row.uom_name}}</td>
+                  <td style="text-align: left; width: 15%">{{ row.info_detail }}
+                  <td style="text-align: right; width: 20%">{{ row.purchase_amount | number : '1.2-2'}} <br>
+                    {{ row.discount | number : '1.2-2'}} <br> {{ row.nett_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right; width: 15%">{{ row.ppn | number : '1.2-2'}} <br> {{ row.pph |
+                    number : '1.2-2'}} <br> {{ row.total_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: left; width: 10%">{{ row.spesification }}
+                  <td style="text-align: center">
+                    <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                        class="fa fa-edit"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--#endregion list view-->
+          </div>
+        </div>
+      </div>
+      <!--#endregion list view-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup PO-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalPO" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupPO" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Date</th>
+                  <th>Branch</th>
+                  <th>Supplier</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupPOCode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupPOCode.numberIndex+i+1}}</td>
+                  <td style="width: 25%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 25%;text-align: center;">{{ row.order_date }}</td>
+                  <td style="width: 25%;">{{ row.branch_name }}</td>
+                  <td style="width: 25%;">{{ row.supplier_name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowPO(row.code, row.branch_code, 
+                        row.branch_name, row.division_code, row.division_name, row.department_code, row.department_name, 
+                        row.sub_departmet_code, row.sub_department_name, row.unit_code, row.unit_name, row.to_bank_code,
+                        row.to_bank_account_no, row.to_bank_account_name, row.payment_by, row.total_amount, 
+                        row.ppn_amount, row.pph_amount, row.deposit_amount, row.currency_code, row.currency_name, row.supplier_code)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup PO -->
+
+<!--#region lookup Vendor-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendor"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupVendor" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupvendor;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupvendor.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowVendor(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Vendor -->
+
+<!--#region lookup DivisionCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDivisionCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDivisionCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdivisioncode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdivisioncode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDivisionCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup DivisionCode -->
+
+<!--#region lookup DepartmentCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDepartmentCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDepartmentCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdepartmentcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdepartmentcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDepartmentCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup DepartmentCode -->
+
+<!--#region lookup SubDepartmentCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubDepartmentCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSubDepartmentCode" class="table table-striped table-bordered hover"
+              cellspacing="0" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsubdepartmentcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsubdepartmentcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSubDepartmentCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SubDepartmentCode -->
+
+<!--#region lookup UnitCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalUnitCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupUnitCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupunitcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupunitcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowUnitCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup UnitCode -->
+
+<!--#region lookup BranchCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranchCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBranchCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranchcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbranchcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranchCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BranchCode -->

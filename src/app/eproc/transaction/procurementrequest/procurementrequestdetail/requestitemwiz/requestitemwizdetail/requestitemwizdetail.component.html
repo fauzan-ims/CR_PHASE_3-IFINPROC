@@ -1,0 +1,367 @@
+<div class="main-content margin-wizard-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #masterrequestitemForm="ngForm"
+          (ngSubmit)="onFormSubmit(masterrequestitemForm.value, masterrequestitemForm.valid)">
+          <!--#region button submit dan back-->
+          <button type="save" class="btn btn-info btn-round" data-role="R00021520032152C"
+            [hidden]="this.tampHiddenStatus">Save</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+
+          <button hidden id="requestwiz" type="button" (click)="callGetrowHeader()"></button>
+          <!--#endregion button submit dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_id-->
+            <input hidden type="text" [ngModel]="this.params" name="p_id">
+            <!--#endregion p_id-->
+
+            <!--#region type_asset_code-->
+            <input hidden type="text" [ngModel]="this.model.type_asset_code" name="p_type_asset_code">
+            <!--#endregion type_asset_code-->
+
+            <!--#region p_vendor_code-->
+            <input hidden type="text" [ngModel]="this.param" name="p_code">
+            <!--#endregion p_vendor_code-->
+
+            <!--#region item_code-->
+            <div class="col-md-4">
+              <label class="labelmodule">Item *</label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupItemCode()" data-target="#lookupModalItemCode" data-toggle="modal" href="#"
+                      [disabled]="this.tampHiddenStatus">
+                      <i class="fa fa-search-plus"></i></button> {{model.item_name}}
+                    <input type="hidden" name="p_item_code" [ngModel]="model.item_code" required #item_code="ngModel" />
+                    <input type="hidden" name="p_item_name" [ngModel]="model.item_name" required #item_name="ngModel" />
+                    <input type="hidden" name="p_item_category_code" [ngModel]="model.item_category_code"
+                      #item_category_code="ngModel" />
+                    <input type="hidden" name="p_item_category_name" [ngModel]="model.item_category_name"
+                      #item_category_name="ngModel" />
+                    <input type="hidden" name="p_item_merk_code" [ngModel]="model.item_merk_code"
+                      #item_merk_code="ngModel" />
+                    <input type="hidden" name="p_item_merk_name" [ngModel]="model.item_merk_name"
+                      #item_merk_name="ngModel" />
+                    <input type="hidden" name="p_item_model_code" [ngModel]="model.item_model_code"
+                      #item_model_code="ngModel" />
+                    <input type="hidden" name="p_item_model_name" [ngModel]="model.item_model_name"
+                      #item_model_name="ngModel" />
+                    <input type="hidden" name="p_item_type_code" [ngModel]="model.item_type_code"
+                      #item_type_code="ngModel" />
+                    <input type="hidden" name="p_item_type_name" [ngModel]="model.item_type_name"
+                      #item_type_name="ngModel" />
+                  </span>
+                </div>
+                <small
+                  *ngIf="item_code.errors?.required && item_code.touched || (item_code.errors?.required && masterrequestitemForm.submitted)"
+                  class="text-danger">
+                  Item is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion item_code-->
+
+            <!--#region quantity_request-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Quantity Request *</label>
+                <input type="text" style="text-align:right" class="form-control col-md-6"
+                  [ngModel]="model.quantity_request" name="p_quantity_request" maxlength="4" required
+                  #quantity_request="ngModel" pattern={{NumberOnlyPattern}} [readOnly]="this.tampHiddenStatus">
+                <small
+                  *ngIf="(quantity_request.errors?.required && quantity_request.touched) || (quantity_request.errors?.required && masterrequestitemForm.submitted)"
+                  class="text-danger">
+                  Quantity Request is required
+                </small>
+                <small *ngIf="quantity_request.errors?.pattern && quantity_request.touched" class="text-danger">
+                  Quantity Request is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+            </div>
+            <!--#endregion area quantity_request-->
+
+            <!--#region approved_quantity-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label class="control-label">Quantity Approved</label>
+                <input type="text" style="text-align:right" class="form-control col-md-6"
+                  [ngModel]="model.approved_quantity" name="p_approved_quantity" maxlength="20" readonly
+                  #approved_quantity="ngModel" pattern={{NumberOnlyPattern}}>
+              </div>
+            </div>
+            <!--#endregion area approved_quantity-->
+
+            <!--#region uom_name-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="uom_name.invalid && uom_name.touched">
+                <label for="uom_name" class="control-label">UOM</label>
+                <input type="hidden" class="form-control" [ngModel]="model.uom_code" name="p_uom_code"
+                  #uom_code="ngModel">
+                <input type="text" class="form-control" [ngModel]="model.uom_name" name="p_uom_name" readonly
+                  #uom_name="ngModel">
+              </div>
+            </div>
+            <!--#endregion uom_name-->
+
+            <!--#region category_type-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="category_type.invalid && category_type.touched">
+                <label for="category_type" class="control-label">Category Type</label>
+                <input type="text" class="form-control" [ngModel]="model.category_type" name="p_category_type" readonly
+                  #category_type="ngModel">
+              </div>
+            </div>
+            <!--#endregion category_type-->
+
+            <!--#region condition-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="condition" class="control-label">Condition</label>
+                <!-- <select [disabled]="this.tampdHidden" class="form-control col-md-6" [ngModel]="model.condition" -->
+                <select [disabled]="this.tampHiddenStatus" class="form-control col-md-6" [ngModel]="model.condition"
+                  name="p_condition" #condition="ngModel">
+                  <option value='NEW'>NEW</option>
+                  <option value='USED'>USED</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion condition-->
+
+            <!--#region fa_code-->
+            <div class="col-md-4" [hidden]="model.category_type == 'ASSET'">
+              <!-- <label class="labelmodule" [hidden]="model.category_type != 'ASSET'">Fixed Asset</label> -->
+              <label class="labelmodule">Fixed Asset</label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupFixedAsset()" data-target="#lookupModalFixedAsset" data-toggle="modal" href="#"
+                      [disabled]="this.tampHiddenStatus">
+                      <i class="fa fa-search-plus"></i></button> {{model.fa_code}} - {{model.fa_name}} -
+                    {{model.engine_no}} - {{model.chassis_no}} - {{model.plat_no}}
+                    <input type="hidden" name="p_fa_code" [ngModel]="model.fa_code" #fa_code="ngModel" />
+                    <input type="hidden" name="p_fa_name" [ngModel]="model.fa_name" #fa_name="ngModel" />
+                    <!-- [required]="model.category_type != 'ASSET'" -->
+                  </span>
+                </div>
+                <!-- <small
+                  *ngIf="fa_code.errors?.required && fa_code.touched || (fa_code.errors?.required && masterrequestitemForm.submitted)"
+                  class="text-danger">
+                  Fixed Asset is required
+                </small> -->
+              </div>
+            </div>
+            <!--#endregion fa_code-->
+
+            <!--#region specification-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="specification.invalid && specification.touched">
+                <label for="specification" class="control-label">Specification *</label>
+                <textarea type="text" class="form-control" [ngModel]="model.specification" name="p_specification"
+                  [readonly]="this.tampHiddenStatus" maxlength="4000" required #specification="ngModel"></textarea>
+                <small
+                  *ngIf="(specification.errors?.required && specification.touched) || (specification.errors?.required && masterrequestitemForm.submitted)"
+                  class="text-danger">
+                  Specification is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion specification-->
+
+            <!--#region is_bbn-->
+            <div class="col-md-4" [hidden]="procurement_type == 'MOBILISASI'">
+              <div class="form-check mt-3" style="margin-left: -35px;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_bbn" name="p_is_bbn"
+                      (click)="SpesificAddress($event)" [disabled]="this.tampHiddenStatus">
+                    BBN
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!--#endregion is_bbn-->
+
+            <!--#region bbn_name-->
+            <div class="col-md-4" [hidden]="tampStatusType == false">
+              <div class="form-group">
+                <label for="bbn_name" class="control-label">BBN Name</label>
+                <input type="text" class="form-control" [disabled]="this.tampHiddenStatus" [ngModel]="model.bbn_name"
+                  maxlength="250" name="p_bbn_name" #bbn_name="ngModel">
+              </div>
+            </div>
+            <!--#endregion bbn_name-->
+
+            <!--#region bbn_location-->
+            <div class="col-md-4" [hidden]="tampStatusType == false">
+              <div class="form-group">
+                <label for="bbn_location" class="control-label">BBN Location</label>
+                <textarea [readonly]="this.tampHiddenStatus" type="text" class="form-control"
+                  [ngModel]="model.bbn_location" name="p_bbn_location" #remark="ngModel" maxlength="4000"></textarea>
+              </div>
+            </div>
+            <!--#endregion bbn_location-->
+
+            <!--#region bbn_address-->
+            <div class="col-md-4" [hidden]="tampStatusType == false">
+              <div class="form-group">
+                <label for="bbn_address" class="control-label">BBN Address</label>
+                <textarea [readonly]="this.tampHiddenStatus" type="text" class="form-control"
+                  [ngModel]="model.bbn_address" name="p_bbn_address" #remark="ngModel" maxlength="4000"></textarea>
+              </div>
+            </div>
+            <!--#endregion bbn_address-->
+
+            <!--#region is_recom-->
+            <div class="col-md-4" [hidden]="procurement_type == 'MOBILISASI'">
+              <div class="form-check mt-3" style="margin-left: -35px;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_recom" name="p_is_recom"
+                      (click)="Recomm($event)" [disabled]="this.tampHiddenStatus">
+                    Is Recom
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!--#endregion is_recom-->
+
+            <!--#region subvention_amount-->
+            <div class="col-md-4" [hidden]="tampStatusRecomm == false">
+              <div class="form-group">
+                <label for="subvention_amount" class="control-label">Subvention Amount
+                </label>
+                <div class="col-md-6" style="margin-left: -15px;">
+                  <input [readonly]="this.tampHiddenStatus" type="text" style="text-align:right" class="form-control"
+                    amount="subvention_amount" [ngModel]="model.subvention_amount | number : '1.2-2'"
+                    name="p_subvention_amount" #subvention_amount="ngModel">
+                </div>
+              </div>
+            </div>
+            <!--#endregion subvention_amount-->
+
+            <!--#region remark-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+                <label for="remark" class="control-label">Remark *</label>
+                <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark" maxlength="4000"
+                  [readOnly]="this.tampHiddenStatus" required #remark="ngModel"></textarea>
+                <small
+                  *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && masterrequestitemForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion remark-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#end region form-->
+      </div>
+      <div class="card-footer ">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup ItemCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalItemCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupItemCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupitemcode;let i=index ">
+                  <td style="text-align: center;">{{lookupitemcode.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowItemCode(row.code, row.description, row.uom_code, row.uom_name, row.type_asset_code, row.item_category_code, row.item_category_name,
+                      row.item_merk_code, row.item_merk_name, row.item_model_code, row.item_model_name, row.item_type_code, row.item_type_name, row.category_type)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup ItemCode -->
+
+<!--#region lookup FA code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixedAsset"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFACode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>FA Code</th>
+                  <th>FA Name</th>
+                  <th>Plat No</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfacode;let i=index ">
+                  <td style="text-align: center;">{{lookupfacode.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 65%;">{{ row.item_name }}</td>
+                  <td style="width: 15%;">{{ row.plat_no }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFACode(row.code, row.item_name, row.engine_no, row.chassis_no, row.plat_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup FA Code -->

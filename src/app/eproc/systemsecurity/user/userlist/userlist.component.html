@@ -1,0 +1,46 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">User List</h5>
+        </div>
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatable" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Last Login Time</th>
+                <th>Active</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listuser;  let i=index">
+                <td style="display: none;"></td>
+                <td style="text-align: center;">{{listuser.numberIndex+i+1}}</td>
+                <td style="width: 20%;text-align: center;">{{row.code}}</td>
+                <td style="width: 45%;text-align: left;">{{row.name}}</td>
+                <td style="width: 20%;text-align: center;">{{row.last_login_date}}</td>
+                <td style="width: 15%;text-align: center;">{{row.is_active}}</td>
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.code)"><i
+                      class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,341 @@
+<div class="main-content">
+    <!-- spinner Area -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner Area -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" [hidden]="this.isWatermark === '0'">
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+                <div class="card-header ">
+                    <h4 class="card-title">Asset Info (Interface)</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#Area form-->
+                    <form #masterpositionForm="ngForm">
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endArea button submit dan back-->
+
+                        <!--#Area row-->
+                        <div class="row">
+                            <!--#Area code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="code" class="control-label">Code</label>
+                                    <input type="text" class="form-control" [ngModel]="model.code" name="p_code"
+                                        #code="ngModel" autocomplete="off" readonly>
+                                </div>
+                            </div>
+                            <!--#endArea code-->
+
+                            <!--#region Lookup item_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="depre_account_no" class="control-label">Item Name</label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalItem"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.item_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.item_code"
+                                                name="p_item_code" required #item_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.item_name"
+                                                name="p_item_name" #item_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="item_code.valid || (item_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Item is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup item_code-->
+
+                            <!--#Area name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Status</label>
+                                    <input type="text" class="form-control" [ngModel]="model.status" name="p_status"
+                                        readonly #name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endArea name-->
+
+                            <!--#region radio button condition-->
+                            <div class="col-md-4">
+                                <label>Condition</label>
+                                <div class="form-group col-md-12">
+                                    <div class="row">
+                                        <div class="form-check-radio form-check-inline">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="p_condition"
+                                                    value="NEW" [(ngModel)]="model.condition"
+                                                    [disabled]="model.status !== 'NEW'" disabled>NEW
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-radio form-check-inline">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="p_condition"
+                                                    value="USED" [(ngModel)]="model.condition"
+                                                    [disabled]="model.status !== 'NEW'" disabled>USED
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion radio button condition-->
+
+                            <!--#region Lookup requestor_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="requestor_code" class="control-label labelmodule">Requestor
+                                    </label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalRequestor"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.requestor_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.requestor_code"
+                                                name="p_requestor_code" #requestor_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.requestor_name"
+                                                name="p_requestor_name" #requestor_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="requestor_code.valid || (requestor_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Requestor is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup requestor_code-->
+
+                            <!--#region Lookup vendor_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="vendor_code" class="control-label labelmodule">Vendor</label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalVendor"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.vendor_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.vendor_code"
+                                                name="p_vendor_code" #vendor_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.vendor_name"
+                                                name="p_vendor_name" #vendor_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="vendor_code.valid || (vendor_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Vendor is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup vendor_code-->
+
+                            <!--#region request date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="purchase_date" class="control-label">Purchase Date</label>
+                                    <div>
+                                        <input class="form-control col-md-4" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.purchase_date" name="p_purchase_date"
+                                            [options]="myDatePickerOptions" required #p_purchase_date="ngModel"
+                                            #purchase_date="angular-mydatepicker" autocomplete="off"
+                                            (click)="purchase_date.toggleCalendar()" [ngStyle]="getStyles(true)"
+                                            readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion request date-->
+
+                            <!--#region purchase_price-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="purchase_price" class="control-label">Purchase Price
+                                    </label>
+                                    <div class="col-md-6" style="margin-left: -15px;">
+                                        <input disabled type="text" style="text-align:right" class="form-control"
+                                            amount="purchase_price" required
+                                            [ngModel]="model.purchase_price | number : '1.2-2'" name="p_purchase_price"
+                                            #purchase_price="ngModel">
+                                        <small
+                                            *ngIf="purchase_price.errors?.required && purchase_price.touched || (purchase_price.errors?.required && masterpositionForm.submitted)"
+                                            class="text-danger">
+                                            Purchase Price is required
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion purchase_price-->
+
+                            <!--#region Invoice no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Invoice No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_no"
+                                        name="p_invoice_no" disabled #name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endrerion Invoice no-->
+
+                            <!--#region invoice date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="purchase_date" class="control-label">Invoice Date</label>
+                                    <div>
+                                        <input class="form-control col-md-4" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.invoice_date" name="p_invoice_date"
+                                            [options]="myDatePickerOptions" required #p_purchase_date="ngModel"
+                                            #purchase_date="angular-mydatepicker" autocomplete="off"
+                                            (click)="purchase_date.toggleCalendar()" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion uinvoice date-->
+
+                            <!--#Area name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Original Price</label>
+                                    <div class="col-md-6" style="margin-left: -15px;">
+                                        <input disabled type="text" style="text-align:right" class="form-control"
+                                            amount="original_price" required
+                                            [ngModel]="model.original_price | number : '1.2-2'" name="p_original_price"
+                                            #original_price="ngModel">
+                                        <small
+                                            *ngIf="original_price.errors?.required && original_price.touched || (original_price.errors?.required && masterpositionForm.submitted)"
+                                            class="text-danger">
+                                            Original Price is required
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endArea name-->
+
+                        </div>
+                        <div class="row">
+
+                            <!--#region Lookup Branch_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="branch" class="control-label labelmodule">Branch</label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalBranch"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.branch_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.branch_code"
+                                                name="p_branch_code" #branch_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.branch_name"
+                                                name="p_branch_name" #branch_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="branch_code.valid || (branch_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Branch is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup Branch_name-->
+
+                            <!--#region Lookup division_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="division_code" class="control-label labelmodule">Division
+                                    </label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalDivision"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.division_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.division_code"
+                                                name="p_division_code" #division_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.division_name"
+                                                name="p_division_name" #division_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="division_code.valid || (division_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Division is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup division_code-->
+
+                            <!--#region Lookup department_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="department_code" class="control-label labelmodule">Department
+                                    </label>
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button disabled class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" data-toggle="modal" data-target="#lookupModalDepartment"
+                                                href="#"><i class="fa fa-search-plus"></i></button>
+                                            {{model.department_name}}
+                                            <input type="hidden" class="form-control" [ngModel]="model.department_code"
+                                                name="p_department_code" #department_code="ngModel">
+                                            <input type="hidden" class="form-control" [ngModel]="model.department_name"
+                                                name="p_department_name" #department_name="ngModel">
+                                        </span>
+                                    </div>
+                                    <small
+                                        [hidden]="department_code.valid || (department_code.pristine && !masterpositionForm.submitted)"
+                                        class="text-danger">
+                                        Department is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup department_code-->
+
+                            <!--#Area name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Type Name</label>
+                                    <input type="text" class="form-control" [ngModel]="model.type_name"
+                                        name="p_type_name" readonly #name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endArea name-->
+
+                            <!--#Area name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Category</label>
+                                    <input type="text" class="form-control" [ngModel]="model.category_name"
+                                        name="p_category_name" readonly #name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endArea name-->
+                        </div>
+
+                    </form>
+                    <!--#end Area form-->
+
+                </div>
+                <div class="card-footer ">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

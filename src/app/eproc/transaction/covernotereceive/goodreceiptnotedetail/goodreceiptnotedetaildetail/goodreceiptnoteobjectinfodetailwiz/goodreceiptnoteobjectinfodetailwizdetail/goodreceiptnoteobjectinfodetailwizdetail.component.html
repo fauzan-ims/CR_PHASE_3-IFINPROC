@@ -1,0 +1,204 @@
+<div class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body ">
+                <!--#region form-->
+                <!--#region button submit dan back-->
+                <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                <button hidden id="salebiddingdetail" type="button" (click)="callGetrow()"></button>
+                <!--#endregion button submit dan back-->
+
+                <!--#region row-->
+                <div class="row">
+                    <input type="text" [ngModel]="model.status" name="p_status" hidden>
+
+                    <!--#region company_code-->
+                    <input type="hidden" class="form-control" [ngModel]="model.company_code" name="p_company_code">
+                    <!--#endregion company_code-->
+
+                    <!--#region sale_code-->
+                    <input type="text" [ngModel]="this.param" maxlength="50" name="p_sale_code" hidden>
+                    <!--#endregion sale_code-->
+
+                    <!--#region plat_no-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code != 'VHCL'">
+                        <div class="form-group">
+                            <label for="plat_no" class="control-label">Plat No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.plat_no" name="p_plat_no"
+                                #plat_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion plat_no-->
+
+                    <!--#region serial_no-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code != 'ELCT'">
+                        <div class="form-group">
+                            <label for="serial_no" class="control-label">Serial No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.serial_no"
+                                name="p_serial_no" #serial_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion serial_no-->
+
+                    <!--#region invoice_no-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code != 'HE' && model.type_asset_code !== 'MCHN'">
+                        <div class="form-group">
+                            <label for="invoice_no" class="control-label">Invoice No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.invoice_no"
+                                name="p_invoice_no" #invoice_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion invoice_no-->
+
+                    <!--#region chassis_no-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code == 'ELCT'">
+                        <div class="form-group">
+                            <label for="chassis_no" class="control-label">Chassis No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.chassis_no"
+                                name="p_chassis_no" #chassis_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion chassis_no-->
+
+                    <!--#region engine_no-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code == 'ELCT'">
+                        <div class="form-group">
+                            <label for="engine_no" class="control-label">Engine No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.engine_no"
+                                name="p_engine_no" #engine_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion engine_no-->
+
+                    <!--#region domain-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code != 'ELCT'">
+                        <div class="form-group">
+                            <label for="engine_no" class="control-label">Domain</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.domain" name="p_domain"
+                                #domain="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion domain-->
+
+                    <!--#region imei-->
+                    <div class="col-md-4" [hidden]="model.type_asset_code != 'ELCT'">
+                        <div class="form-group">
+                            <label for="imei" class="control-label">IMEI</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.imei" name="p_imei"
+                                #imei="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion imei-->
+
+                    <!--#region bpkb_no-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="bpkb_no" class="control-label">BPKB No</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.bpkb_no" name="p_bpkb_no"
+                                #bpkb_no="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion bpkb_no-->
+
+                    <!--#region cover_note-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="cover_note" class="control-label">Cover Note</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.cover_note"
+                                name="p_cover_note" #cover_note="ngModel" maxlength="50" />
+                        </div>
+                    </div>
+                    <!--#endregion cover_note-->
+
+                    <!--#region exp_date-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exp_date" class="control-label">EXP date</label>
+                            <div>
+                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                    [ngModel]="model.exp_date" name="p_exp_date" [options]="myDatePickerOptions"
+                                    required #p_exp_date="ngModel" #exp_date="angular-mydatepicker" autocomplete="off"
+                                    (click)="exp_date.toggleCalendar()" [ngStyle]="getStyles(true)" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion exp_date-->
+                </div>
+                <!--#endregion row-->
+            </div>
+            <!--[hidden]="model.buy_type == 'By Batch'"-->
+            <div id="ListBiddingDetail" *ngIf="paramss == null">
+                <!--#region list view-->
+                <span layout="row horizontal-divider">
+                    <hr flex />
+                </span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <h4 class="card-title">Checklist List</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="toolbar">
+                                <!--#region button--->
+                                <button [hidden]="isReadOnly" class="btn btn-info btn-round"
+                                    data-role="R00021590042160C" (click)="btnSaveList()">
+                                    Save
+                                </button>
+                                <button hidden id="tabdetailwiz" type="button" (click)="callGetrowHeader()"></button>
+                                <!--#endregion button--->
+                            </div>
+
+                            <!--#region list view-->
+                            <table id="datatableGrnChecklist" datatable [dtOptions]="dtOptions"
+                                class="table table-striped table-bordered row-border hover" cellspacing="0"
+                                width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="disabled-sorting">No</th>
+                                        <th style="display:none ;"></th>
+                                        <th>Checklist</th>
+                                        <th>Status</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of listgrnchecklist;  let i=index">
+                                        <td style="text-align: center;">{{listgrnchecklist.numberIndex+i+1}}</td>
+                                        <td class="if-no-edit-btn" style="display: none;"></td>
+                                        <input type="hidden" value="{{row.id}}" name="p_id_checklist">
+                                        <td style="width: 20%;text-align: left;">{{row.checklist_name}} </td>
+                                        <td style="text-align: left;width: 15%;">
+                                            <div class="form-group">
+                                                <select [disabled]="isReadOnly" class='form-control'
+                                                    value="{{row.checklist_status}}" name="p_checklist_status">
+                                                    <option value='' hidden></option>
+                                                    <option value='BAIK'>BAIK</option>
+                                                    <option value='RUSAK'>RUSAK</option>
+                                                    <option value='HILANG'>HILANG</option>
+                                                    <option value='TIDAK ADA'>TIDAK ADA</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td style="width: 65%;">
+                                            <textarea [readonly]="isReadOnly" id="checklist_remark{{i}}"
+                                                class="form-control" type="text" value="{{row.checklist_remark}}"
+                                                name="p_checklist_remark">
+                                            </textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--#endregion list view-->
+                        </div>
+                    </div>
+                </div>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>

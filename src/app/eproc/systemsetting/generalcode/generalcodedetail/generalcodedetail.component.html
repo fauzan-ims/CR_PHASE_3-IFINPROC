@@ -1,0 +1,141 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h5 class="card-title">General Code Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #generalcodeForm="ngForm" (ngSubmit)="onFormSubmit(generalcodeForm.value, generalcodeForm.valid)">
+            <!--#region button submit, button back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00021460002146P">Save</button>
+            <button [hidden]="this.param === null" type="button" class="btn btn-success btn-round"
+              (click)="btnEditable()" data-role="R00021460002147U">Editable</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit, button back-->
+
+            <!--#region div-->
+            <div class="row">
+              <!--#region company_code-->
+              <input type="hidden" class="form-control" [ngModel]="model.company_code" name="p_company_code"
+                #company_code="ngModel">
+              <!--#endregion company_code-->
+
+              <!--#region code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="code" class="control-label">Code *</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" [readonly]="isReadOnly"
+                    required #code="ngModel" maxlength="10">
+                  <small
+                    *ngIf="(code.errors?.required && code.touched) || (code.errors?.required && generalcodeForm.submitted)"
+                    class="text-danger">
+                    Code is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region Description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.description" name="p_description" required
+                    #description="ngModel"></textarea>
+                  <small
+                    *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && generalcodeForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Description-->
+
+              <!--#region is_editable-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input [disabled]="this.param != null" class="form-check-input" type="checkbox"
+                        [ngModel]="model.is_editable" name="p_is_editable"> Editable
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_editable-->
+            </div>
+            <!--#endregion div-->
+
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+        <div *ngIf="param != null" class="row">
+          <div class="col-md-12">
+            <div class="card-header">
+              <h5 class="card-title">Sub General Code List</h5>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+                <!--#region button add-->
+                <button class="btn btn-info btn-round" (click)="btnAdd()" data-role="R00021460012146C"
+                  [hidden]="model.is_editable !== true">
+                  Add
+                </button>
+                <!--#endregion button add-->
+              </div>
+              <!--#region list view-->
+              <table id="datatables" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Order Key</th>
+                    <th>Active</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of generalsubcodelist;  let i=index">
+                    <td style="text-align: center;">{{generalsubcodelist.numberIndex+i+1}}</td>
+                    <td style="display: none;"></td>
+                    <td style="width: 20%;text-align: center;">{{row.code}}</td>
+                    <td style="width: 50%;text-align: left;">{{row.description}}</td>
+                    <td style="width: 10%;text-align: center;">{{row.order_key}}</td>
+                    <td style="width: 15%;text-align: center;">{{row.is_active}}</td>
+                    <td style="text-align: center;">
+                      <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                        (click)="btnEdit(row.code)"><i class="fa fa-edit"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<div class="main-content margin-wizard-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #requestdocumentForm="ngForm" (ngSubmit)="onFormSubmit(requestdocumentForm.value, requestdocumentForm.valid)">
+
+          <!--#region button save dan back-->
+          <button type="submit" class="btn btn-info btn-round" data-role="R00021530012153C">Save</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          
+          <!--#endregion button save dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_code-->
+            <input type="text" [ngModel]="this.param" name="p_procurement_request_code" hidden>
+            <!--#endregion p_code-->
+
+            <!--#region p_id-->
+            <input hidden type="text" [ngModel]="this.params" name="p_id">
+            <!--#endregion p_id-->
+
+            <!--#region paths-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>File</label>
+                <div class="row" style="margin-left: 30px;">
+                  <div class="fileinput fileinput-new text-left" data-provides="fileinput">
+                    <div [hidden]="this.tampHidden !== true">
+                      <span class="btn btn-info btn-round btn-file ">
+                        <input type="file" (change)="onUpload($event, this.param)" id="fileControl"/>
+                        <span><i class="fa fa-check"></i></span>
+                      </span>
+                      {{tempFile}}
+                    </div>
+                    <div [hidden]="this.tampHidden !== false">
+                      <span>
+                        <a class="btn btn-danger btn-round btn-file " type="button" (click)="deleteImage(model.paths)">
+                          <span><i class="fa fa-trash"></i></span></a>
+                        <a class="btn btn-primary btn-round btn-file " type="button">
+                          <span><i class="fa fa-eye"></i></span></a>
+                      </span>
+                      <div> {{model.file_name}} </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion paths-->
+
+            <!--#region remark-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+                <label for="remark" class="control-label">Remark *</label>
+                <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark" maxlength="4000"
+                  required #remark="ngModel"></textarea>
+                <small
+                  *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && requestdocumentForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion remark-->
+
+
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>
+ 

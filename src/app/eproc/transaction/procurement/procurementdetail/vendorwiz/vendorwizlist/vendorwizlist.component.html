@@ -1,0 +1,126 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <div class="toolbar" [hidden]="this.tampHiddenStatus === true">
+                    <!--#region button add-->
+                    <button class="btn btn-info btn-round" type="button" (click)="btnLookupVendor()"
+                        data-target="#lookupModalVendor" data-toggle="modal" href="#" data-role="R00021540022154C">
+                        Add </button>
+                    <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00021540022154D"
+                        [hidden]="this.tampHiddenStatus">
+                        Delete
+                    </button>
+                    <button hidden id="vendorwiz" type="button" (click)="callGetrowHeader()"></button>
+                    <!--#endregion button add-->
+                </div>
+
+                <!--#region list view-->
+                <table id="datatablevendor" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                            [(ngModel)]="selectedAll" (change)="selectAll();" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th>Code</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of vendorlist;  let i=index">
+                            <td style="text-align: center;">{{vendorlist.numberIndex+i+1}}</td>
+                            <td class="disabled-sorting if-no-edit-btn">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            (change)="checkIfAllTableSelected($event, row.id);">
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td style="text-align: left; width: 50%;">{{row.vendor_code }}</td>
+                            <td style="text-align: left; width: 50%;">{{row.vendor_name }}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup Vendor-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendor"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" data-role="R00021540022154C">
+                            add
+                        </button>
+
+                        <table id="datatableLookupVendor" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkallLookup"
+                                                    [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th hidden>Order Key</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupvendor;let i=index ">
+                                    <td style="text-align: center;">{{lookupvendor.numberIndex+i+1}}</td>
+                                    <td class="disabled-sorting if-no-edit-btn">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedLookup"
+                                                    (change)="checkIfAllLookupSelected($event, row.code, row.name);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.name }}</td>
+                                    <td hidden>{{ row.order_key}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Vendor -->

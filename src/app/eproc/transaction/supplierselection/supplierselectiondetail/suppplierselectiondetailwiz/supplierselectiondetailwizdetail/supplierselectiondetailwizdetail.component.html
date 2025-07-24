@@ -1,0 +1,842 @@
+<div class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <!--#region form-->
+                <form #quoReviewDetailForm="ngForm"
+                    (ngSubmit)="onFormSubmit(quoReviewDetailForm.value, quoReviewDetailForm.valid)">
+                    <!--#region button submit, button back-->
+                    <!-- <button [hidden]="this.param == null || model.status != 'HOLD' || model.status === 'POST'" type="submit" -->
+                    <button type="submit" data-role="R00015290001530C" class="btn btn-info btn-round"
+                        [hidden]="this.param == null || tampHidden">Save</button>
+                    <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                    <button style='float: right;' type="button"
+                        class="btn btn-warning btn-round fa fa-edit custom-button-width"
+                        data-target="#lookupModalMarketing" (click)="btnMarketingInfo()" data-toggle="modal"
+                        href="#"></button>
+                    <!--#endregion button submit, button back-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region code-->
+                        <input hidden type="text" [ngModel]="this.param" name="p_selection_code">
+                        <input hidden type="text" [ngModel]="this.params" name="p_id">
+                        <!--#endregion code-->
+
+                        <!--#region item_code-->
+                        <div class="col-md-4">
+                            <label class="labelmodule">Item</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <span>
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupItemCode()"
+                                            data-target="#lookupModalItemCode" data-toggle="modal" href="#"
+                                            [disabled]="this.tampHidden || this.params !== null">
+                                            <i class="fa fa-search-plus"></i></button> {{model.item_name}}
+                                        <input type="hidden" name="p_item_code" [ngModel]="model.item_code"
+                                            #item_code="ngModel" />
+                                        <input type="hidden" name="p_item_name" [ngModel]="model.item_name"
+                                            #item_name="ngModel" />
+                                    </span>
+                                </div>
+                                <small
+                                    *ngIf="item_code.errors?.required && item_code.touched || (item_code.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Item is required
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion item_code-->
+
+                        <!--#region supplier_code-->
+                        <div class="col-md-4">
+                            <label class="labelmodule">Supplier Code</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <span>
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupVendor()" data-target="#lookupModalVendor"
+                                            data-toggle="modal" href="#"
+                                            [disabled]="this.tampHidden || this.params !== null">
+                                            <i class="fa fa-search-plus"></i></button> {{model.supplier_name}}
+                                        <input type="hidden" name="p_supplier_code" [ngModel]="model.supplier_code"
+                                            #supplier_code="ngModel" />
+                                        <input type="hidden" name="p_supplier_name" [ngModel]="model.supplier_name"
+                                            #supplier_name="ngModel" />
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--#endregion supplier_code-->
+
+                        <!--#region supplier_selection_detail_status-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Status</label>
+                                <input type="text" class="form-control"
+                                    [ngModel]="model.supplier_selection_detail_status"
+                                    name="p_supplier_selection_detail_status" maxlength="50"
+                                    #supplier_selection_detail_status="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion supplier_selection_detail_status-->
+
+                        <!--#region quantity-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Quantity</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-4"
+                                    [ngModel]="model.quantity" name="p_quantity" maxlength="4"
+                                    [readonly]="this.tampHidden || this.params !== null" #quantity="ngModel">
+                                <small
+                                    *ngIf="(quantity.errors?.required && quantity.touched) || (quantity.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Quantity is required
+                                </small>
+                                <small *ngIf="quantity.errors?.pattern && quantity.touched" class="text-danger">
+                                    Quantity is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion quantity-->
+
+                        <!--#region quotation_quantity-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Quotation Quantity</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-4"
+                                    [ngModel]="model.quotation_quantity" name="p_quotation_quantity" maxlength="4"
+                                    [readonly]="this.tampHidden || this.params !== null" #quotation_quantity="ngModel">
+                                <small
+                                    *ngIf="(quotation_quantity.errors?.required && quotation_quantity.touched) || (quotation_quantity.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Quotation Quantity is required
+                                </small>
+                                <small *ngIf="quotation_quantity.errors?.pattern && quotation_quantity.touched"
+                                    class="text-danger">
+                                    Quotation Quantity is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion area quotation_quantity-->
+
+                        <!--#region amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Unit Price</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-6"
+                                    [ngModel]="model.amount | number : '1.2-2'" maxlength="24" amount="amount"
+                                    name="p_amount" [readonly]="this.tampHidden || this.params !== null"
+                                    #amount="ngModel">
+                                <small
+                                    *ngIf="(amount.errors?.required && amount.touched) || (amount.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Price Amount is required
+                                </small>
+                                <small
+                                    *ngIf="amount.errors?.pattern && amount.touched || (amount.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Amount is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion amount-->
+
+                        <!--#region quotation_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group"
+                                [class.has-error]="quotation_amount.invalid && quotation_amount.touched">
+                                <label for="quotation_amount" class="control-label">Quotation Amount</label>
+                                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                    amount="quotation_amount" maxlength="24"
+                                    [ngModel]="model.quotation_amount | number : '1.2-2'" name="p_quotation_amount"
+                                    #quotation_amount="ngModel" [readonly]="this.tampHidden || this.params !== null">
+                                <small
+                                    *ngIf="quotation_amount.errors?.required && quotation_amount.touched || (quotation_amount.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Quotation Amount is required
+                                </small>
+                                <small
+                                    *ngIf="quotation_amount.errors?.pattern && quotation_amount.touched || (quotation_amount.errors?.pattern && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Quotation Amount is required and format should be <i>0-9</i>
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion quotation_amount-->
+
+                        <!--#region discount_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group"
+                                [class.has-error]="discount_amount.invalid && discount_amount.touched">
+                                <label for="discount_amount" class="control-label">Discount Amount</label>
+                                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                    amount="discount_amount" maxlength="24"
+                                    [ngModel]="model.discount_amount | number : '1.2-2'" name="p_discount_amount"
+                                    #discount_amount="ngModel" [readonly]="this.tampHidden || this.params !== null">
+                                <small
+                                    *ngIf="discount_amount.errors?.required && discount_amount.touched || (discount_amount.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Total Amount is required
+                                </small>
+                                <small
+                                    *ngIf="discount_amount.errors?.pattern && discount_amount.touched || (discount_amount.errors?.pattern && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Discount Amount is required and format should be <i>0-9</i>
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion total_amount-->
+
+                        <!--#region total_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group" [class.has-error]="total_amount.invalid && total_amount.touched">
+                                <label for="total_amount" class="control-label">Nett Amount</label>
+                                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                    amount="total_amount" maxlength="24"
+                                    [ngModel]="model.total_amount | number : '1.2-2'" name="p_total_amount"
+                                    #total_amount="ngModel" [readonly]="this.tampHidden || this.params !== null">
+                                <small
+                                    *ngIf="total_amount.errors?.required && total_amount.touched || (total_amount.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Total Amount is required
+                                </small>
+                                <small
+                                    *ngIf="total_amount.errors?.pattern && total_amount.touched || (total_amount.errors?.pattern && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Total Amount is required and format should be <i>0-9</i>
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion total_amount-->
+
+                        <!--#region tax_code-->
+                        <div class="col-md-4">
+                            <label class="labelmodule">Tax</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <span>
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupTaxCode()" data-target="#lookupModalTax"
+                                            data-toggle="modal" href="#" disabled>
+                                            <i class="fa fa-search-plus"></i></button> {{model.tax_name}}
+                                        <input type="hidden" name="p_tax_code" [ngModel]="model.tax_code"
+                                            #tax_code="ngModel" />
+                                        <input type="hidden" name="p_tax_name" [ngModel]="model.tax_name"
+                                            #tax_name="ngModel" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion tax_code-->
+
+                        <!--#region pph_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">PPH Amount</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-6"
+                                    [ngModel]="model.pph_amount | number : '1.2-2'" maxlength="24" pph_amount="amount"
+                                    name="p_pph_amount" [readonly]="this.tampHidden || this.params !== null"
+                                    #pph_amount="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion pph_amount-->
+
+                        <!--#region ppn_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">PPN Amount</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-6"
+                                    [ngModel]="model.ppn_amount | number : '1.2-2'" maxlength="24" ppn_amount="amount"
+                                    name="p_ppn_amount" [readonly]="this.tampHidden || this.params !== null"
+                                    #pph_appn_amountmount="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion ppn_amount-->
+
+                        <!--#region total_amount_after_tax-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Total Amount</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-6"
+                                    [ngModel]="model.total_amount_after_tax | number : '1.2-2'" maxlength="24"
+                                    total_amount_after_tax="amount" name="p_total_amount_after_tax"
+                                    [readonly]="this.tampHidden || this.params !== null"
+                                    #total_amount_after_tax="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion total_amount_after_tax-->
+
+                        <!--#region unit from-->
+                        <div class="col-md-4">
+                            <label>Unit From</label>
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_unit_from" disabled
+                                                #unit_from="ngModel" value="RENT" [(ngModel)]="model.unit_from">RENT
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_unit_from" disabled
+                                                #unit_from="ngModel" value="BUY" [(ngModel)]="model.unit_from">BUY
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion unit from-->
+
+                        <!--#region unit_available_status-->
+                        <div class="col-md-4">
+                            <label>Unit Stock</label>
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_unit_available_status"
+                                                #unit_from="ngModel" [disabled]="this.isDisable" value="READY"
+                                                [(ngModel)]="model.unit_available_status"
+                                                #unit_available_status="ngModel">READY
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_unit_available_status"
+                                                #unit_from="ngModel" [disabled]="this.isDisable2" value="INDENT"
+                                                [(ngModel)]="model.unit_available_status"
+                                                #unit_available_status="ngModel">INDENT
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- <small
+                      *ngIf="unit_available_status.errors?.required && unit_available_status.touched || (unit_available_status.errors?.required && quoReviewDetailForm.submitted)"
+                      class="text-danger">
+                      Unit Stock is required
+                    </small> -->
+                            </div>
+                        </div>
+                        <!--#endregion unit_available_status-->
+
+                        <!--#region indent_days-->
+                        <div class="col-md-4" [hidden]="model.unit_available_status == 'READY'">
+                            <div class="form-group">
+                                <label class="control-label">Indent Days</label>
+                                <input type="text" style="text-align:right" class="form-control col-md-4"
+                                    [ngModel]="model.indent_days" name="p_indent_days" maxlength="4"
+                                    pattern={{NumberOnlyPattern}} #indent_days="ngModel" [readonly]="this.tampHidden">
+                            </div>
+                        </div>
+                        <!--#endregion area indent_days-->
+
+                        <!--#region offering-->
+                        <div class="col-md-4">
+                            <div class="form-group" [class.has-error]="offering.invalid && offering.touched">
+                                <label for="offering" class="control-label">Offering</label>
+                                <textarea type="text" class="form-control" [ngModel]="model.offering" name="p_offering"
+                                    [readonly]="this.tampHidden" maxlength="4000" #offering="ngModel"></textarea>
+                                <small
+                                    *ngIf="offering.errors?.required && offering.touched || (offering.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Offering is required
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion offering-->
+
+                        <!--#region bbn_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">BBN Name</label>
+                                <input type="text" class="form-control" [ngModel]="model.bbn_name" name="p_bbn_name"
+                                    maxlength="250" #bbn_name="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion bbn_name-->
+
+                        <!--#region bbn_location-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">BBN Location</label>
+                                <input type="text" class="form-control" [ngModel]="model.bbn_location"
+                                    name="p_bbn_location" maxlength="250" #bbn_location="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion bbn_location-->
+
+                        <!--#region bbn_address-->
+                        <div class="col-md-4">
+                            <div class="form-group" [class.has-error]="bbn_address.invalid && bbn_address.touched">
+                                <label for="bbn_address" class="control-label">BBN Address</label>
+                                <textarea type="text" class="form-control" [ngModel]="model.bbn_address"
+                                    name="p_bbn_address" maxlength="4000" #bbn_address="ngModel" readonly></textarea>
+                            </div>
+                        </div>
+                        <!--#endregion bbn_address-->
+
+                        <!--#region deliver_to_address-->
+                        <div class="col-md-4">
+                            <div class="form-group"
+                                [class.has-error]="deliver_to_address.invalid && deliver_to_address.touched">
+                                <label for="deliver_to_address" class="control-label">Deliver To Address</label>
+                                <textarea type="text" class="form-control" [ngModel]="model.deliver_to_address"
+                                    name="p_deliver_to_address" maxlength="4000" #deliver_to_address="ngModel"
+                                    readonly></textarea>
+                            </div>
+                        </div>
+                        <!--#endregion deliver_to_address-->
+
+                        <!--#region spesification-->
+                        <div class="col-md-4">
+                            <div class="form-group" [class.has-error]="spesification.invalid && spesification.touched">
+                                <label for="spesification" class="control-label">Spesification</label>
+                                <textarea type="text" class="form-control" [ngModel]="model.spesification"
+                                    name="p_spesification" maxlength="4000" #spesification="ngModel"
+                                    readonly></textarea>
+                            </div>
+                        </div>
+                        <!--#endregion spesification-->
+
+                        <!--#region remark-->
+                        <div class="col-md-4">
+                            <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+                                <label for="remark" class="control-label">Remark</label>
+                                <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark"
+                                    maxlength="4000" #remark="ngModel" readonly></textarea>
+                                <small
+                                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && quoReviewDetailForm.submitted)"
+                                    class="text-danger">
+                                    Remark is required
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion remark-->
+                    </div>
+                    <!--#endregion row -->
+                </form>
+                <!--#endregion form-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup BranchCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranchCode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupBranchCode" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupbranchcode;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupbranchcode.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowBranchCode(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup BranchCode -->
+
+<!--#region lookup ItemCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalItemCode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupItemCode" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupitemcode;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupitemcode.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowItemCode(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup ItemCode -->
+
+<!--#region lookup UomCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalUomCode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupUomCode" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupuomcode;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupuomcode.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowUomCode(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup UomCode -->
+
+<!--#region lookup RequestorCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalRequestorCode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupRequestorCode" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Name</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookuprequestorcode;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookuprequestorcode.numberIndex+i+1}}</td>
+                                    <td style="width: 100%;">{{ row.name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowRequestorCode(row.code, row.name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup RequestorCode -->
+
+<!--#region lookup CurrencyCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCurrencyCode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupCurrencyCode" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupcurrencycode;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupcurrencycode.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowCurrencyCode(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup CurrencyCode -->
+
+<!--#region lookup Tax-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalTax" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupTax" class="table table-striped table-bordered hover" cellspacing="0"
+                            style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupTax;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupTax.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowTax(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Tax -->
+
+<!--#region lookup marketing-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMarketing"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden; padding: 10px;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region requestor_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="requestor_name" class="control-label">Marketing</label>
+                                    <input type="text" class="form-control" [ngModel]="model.requestor_name"
+                                        name="p_requestor_name" #requestor_name="ngModel" autocomplete="off" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion requestor_name-->
+
+                            <!--#region application_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="application_no" class="control-label">Application No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.application_no"
+                                        name="p_application_no" #application_no="ngModel" autocomplete="off" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion application_no-->
+
+                            <!--#region asset_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="asset_no" class="control-label">Asset No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no"
+                                        #asset_no="ngModel" autocomplete="off" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion asset_no-->
+                        </div>
+
+                        <div class="row">
+                            <!--#region otr_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="otr_amount" class="control-label">OTR Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.otr_amount | number : '1.2-2'" name="p_otr_amount"
+                                        #otr_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion otr_amount-->
+
+                            <!--#region asset_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="asset_amount" class="control-label">Unit Amount exc VAT</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.asset_amount | number : '1.2-2'" name="p_asset_amount"
+                                        #asset_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion asset_amount-->
+
+                            <!--#region asset_discount_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="asset_discount_amount" class="control-label">Asset Discount
+                                        Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.asset_discount_amount | number : '1.2-2'"
+                                        name="p_asset_discount_amount" #asset_discount_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion asset_discount_amount-->
+                        </div>
+
+                        <div class="row">
+                            <!--#region karoseri_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="karoseri_amount" class="control-label">Karoseri Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.karoseri_amount | number : '1.2-2'" name="p_karoseri_amount"
+                                        #karoseri_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion karoseri_amount-->
+
+                            <!--#region karoseri_discount_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="karoseri_discount_amount" class="control-label">Karoseri Disc
+                                        Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.karoseri_discount_amount | number : '1.2-2'"
+                                        name="p_karoseri_discount_amount" #karoseri_discount_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion karoseri_discount_amount-->
+                        </div>
+
+                        <div class="row">
+                            <!--#region accesories_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="accesories_amount" class="control-label">Accesoris Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.accesories_amount | number : '1.2-2'"
+                                        name="p_accesories_amount" #accesories_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion accesories_amount-->
+
+                            <!--#region accesories_discount_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="accesories_discount_amount" class="control-label">Accesoris Disc
+                                        Amount</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.accesories_discount_amount | number : '1.2-2'"
+                                        name="p_accesories_discount_amount" #accesories_discount_amount="ngModel"
+                                        readonly>
+                                </div>
+                            </div>
+                            <!--#endregion accesories_discount_amount-->
+
+                            <!--#region mobilization_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="mobilization_amount" class="control-label">Mobilization Amount </label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.mobilization_amount | number : '1.2-2'"
+                                        name="p_mobilization_amount" #mobilization_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion mobilization_amount-->
+                        </div>
+                        <!--#endregion row-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup marketing-->

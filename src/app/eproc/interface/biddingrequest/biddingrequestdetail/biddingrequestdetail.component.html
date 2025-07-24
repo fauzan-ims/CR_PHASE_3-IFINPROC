@@ -1,0 +1,103 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h4 class="card-title">Bidding Request Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <!-- <form #masterpositionForm="ngForm"
+            (ngSubmit)="onFormSubmit(masterpositionForm.value, masterpositionForm.valid)"> -->
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button submit dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="code" class="control-label">Code *</label>
+                <input type="text" class="form-control" [ngModel]="model.code" name="p_code" #code="ngModel"
+                  autocomplete="off" readonly>
+              </div>
+            </div>
+            <!--#endregion code-->
+
+            <input type="hidden" class="form-control" [ngModel]="model.id" name="p_id" #id="ngModel">
+
+            <!--#region company_code-->
+            <input type="text" class="form-control" [ngModel]="model.company_code" name="p_company_code"
+              #company_code="ngModel" hidden>
+            <!--#endregion company_code-->
+
+            <!--#region budget_amount-->
+            <div class="col-md-4">
+              <div class="form-group" [class.has-error]="budget_amount.invalid && budget_amount.touched">
+                <label for="budget_amount" class="control-label">Budget Amount *</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" amount="budget_amount"
+                  maxlength="250" [ngModel]="model.budget_amount| number : '1.2-2'" name="p_budget_amount"
+                  #budget_amount="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion budget_amount-->
+
+            <!--#region description-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="description" class="control-label">Description *</label>
+                <input type="text" class="form-control" [ngModel]="model.description" name="p_description" readonly
+                  #description="ngModel">
+              </div>
+            </div>
+            <!--#endregion description-->
+          </div>
+          <!--#endregion row-->
+
+          <!-- </form> -->
+          <!--#end region form-->
+
+        </div>
+        <div class="card-footer ">
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="param == null">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item" id="biddingreqesutdetail">
+                      <a class="nav-link" (click)="biddingrequestdetailwiz()" href="#biddingreqesutdetaillist"
+                        data-toggle="tab" role="tab" aria-controls="biddingreqesutdetail" aria-selected="true">
+                        Bidding Request Detail
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

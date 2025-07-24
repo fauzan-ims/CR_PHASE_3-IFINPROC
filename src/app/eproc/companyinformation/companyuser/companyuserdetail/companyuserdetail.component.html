@@ -1,0 +1,498 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12 buttons btn-lookup-margin">
+            <div class="card ">
+                <div class="card-header ">
+                    <h4 class="card-title">User Register Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #companyuserForm="ngForm"
+                        (ngSubmit)="onFormSubmit(companyuserForm.value, companyuserForm.valid)">
+
+                        <!--#region button save -->
+                        <button type="submit" class="btn btn-info btn-round" data-role="R00021510002152C"
+                            [hidden]="isDefault">
+                            Save
+                        </button>
+
+                        <button [hidden]="this.param == null" type="button"
+                            class="btn btn-success btn-round custom-button-width" (click)="btnResendEmail()"
+                            data-role="R00021510022151C">Resend Email
+                        </button>
+
+                        <button [hidden]="this.param == null" type="button"
+                            class="btn btn-info btn-round custom-button-width" (click)="btnResetPassword()"
+                            data-role="R00021510032151C">Reset Password
+                        </button>
+                        <!--#endregion button save-->
+
+                        <!--#region button Upload -->
+                        <span class="btn btn-info btn-round btn-file custom-button-width"
+                            [hidden]="this.tampHidden === true || this.param == null">
+                            <input type="file" accept=".png, .jpeg, .jpg" (change)="onUpload($event)"
+                                data-role="R00021510012151C" />
+                            <span>Upload Photo</span>
+                        </span>{{tempFile}}
+                        <button [hidden]="this.param == null || this.model.is_default === '1'"
+                            class="btn btn-info btn-round custom-button-width" type="button"
+                            (click)="btnActive(model.code)" data-role="R00021510002152U">
+                            <span [hidden]="model.is_active === true || this.param == null">Active</span>
+                            <span [hidden]="model.is_active === false || this.param == null">Inactive</span>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button Upload-->
+
+                        <!--#region row-->
+                        <div class="row">
+
+                            <input type="hidden" class="form-control" [ngModel]="model.upass" name="p_upass">
+                            <input type="hidden" class="form-control" [ngModel]="model.upassapproval"
+                                name="p_upassapproval">
+                            <input type="hidden" class="form-control" [ngModel]="model.last_fail_count"
+                                name="p_last_fail_count">
+                            <input type="hidden" class="form-control" [ngModel]="model.company_code"
+                                name="p_company_code">
+                            <input id="Default" type="hidden" class="form-control" [ngModel]="model.is_default"
+                                name="p_is_default">
+
+                            <!--#region code-->
+                            <div class="col-md-4">
+                                <div [hidden]="model.code != null" class="row"
+                                    style="margin-bottom: -15px; padding-top: 30px;">
+                                    <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                                    <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                                        Generate-</h1>
+                                </div>
+                                <div [hidden]="model.code == null" class="form-group">
+                                    <label>Code</label>
+                                    <input type="text" class="form-control" [ngModel]="this.param" name="p_code"
+                                        readonly>
+                                </div>
+                            </div>
+                            <!--#endregion code-->
+
+                            <!--#region name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.name" name="p_name"
+                                        #name="ngModel" required [readonly]="isDefault">
+                                    <small
+                                        *ngIf="(name.errors?.required && name.touched) || (name.errors?.required && companyuserForm.submitted)"
+                                        class="text-danger">
+                                        Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion name-->
+
+                            <!--#region username-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="username" class="control-label">Username *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.username" name="p_username"
+                                        #username="ngModel" required [readonly]="isDefault">
+                                    <small
+                                        *ngIf="(username.errors?.required && username.touched) || (username.errors?.required && companyuserForm.submitted)"
+                                        class="text-danger">
+                                        Username is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion username-->
+
+                            <!--#region Lookup main_task_code -->
+                            <div class="col-md-4">
+                                <label class="labelgsubcode">Main Task *</label>
+                                <div class="form-group">
+                                    <span class="col-md-12">
+                                        <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                            (click)="btnLookupMainTask()" data-toggle="modal" [disabled]="isDefault"
+                                            data-target="#lookupModalMainTask" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.main_task_name}}
+                                        <input id="taskuserCode" type="hidden" class="form-control"
+                                            [ngModel]="model.main_task_code" name="p_main_task_code" required
+                                            #main_task_code="ngModel">
+                                        <small
+                                            *ngIf="(main_task_code.errors?.required && main_task_code.touched) || (main_task_code.errors?.required && companyuserForm.submitted)"
+                                            class="text-danger">
+                                            Main Task is required
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup main_task_code-->
+
+                            <!--#region email-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="email" class="control-label">Email *</label>
+                                    <input type="email" class="form-control" [ngModel]="model.email" name="p_email"
+                                        #email="ngModel" pattern={{EmailPattern}} [readonly]="isDefault" required>
+                                </div>
+                                <small
+                                    *ngIf="(email.errors?.required && email.touched) || (email.errors?.required && companyuserForm.submitted)"
+                                    class="text-danger">
+                                    Email is required and format should be <i>john@doe.com</i>.
+                                </small>
+                            </div>
+                            <!--#endregion email-->
+
+                            <!--#region phone_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="phone_no" class="control-label">Mobile Phone *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.phone_no" name="p_phone_no"
+                                        #phone_no="ngModel" required [readonly]="isDefault" maxlength="12"
+                                        pattern={{NumberOnlyPattern}}>
+                                    <small
+                                        *ngIf="(phone_no.errors?.required && phone_no.touched) || (phone_no.errors?.required && companyuserForm.submitted)"
+                                        class="text-danger">
+                                        Mobile Phone is required
+                                    </small>
+                                    <small *ngIf="phone_no.errors?.pattern && phone_no.touched" class="text-danger">
+                                        Mobile Phone is required and format should be <i>0-9</i>
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion phone_no-->
+
+                            <!--#region Lookup province_code-->
+                            <div class="col-md-4">
+                                <label class="labelgsubcode">Province *</label>
+                                <div class="form-group">
+                                    <span class="col-md-12">
+                                        <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                            (click)="btnLookupProvince()" data-toggle="modal" [disabled]="isDefault"
+                                            data-target="#lookupModalProvince" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.province_name}}
+                                        <input type="hidden" class="form-control" [ngModel]="model.province_code"
+                                            name="p_province_code" required #province_code="ngModel">
+                                        <input type="hidden" class="form-control" [ngModel]="model.province_name"
+                                            name="p_province_name" required #province_name="ngModel">
+                                        <small
+                                            *ngIf="(province_code.errors?.required && province_code.touched) || (province_code.errors?.required && companyuserForm.submitted)"
+                                            class="text-danger">
+                                            Province is required
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup province_code-->
+
+                            <!--#region Lookup city_code-->
+                            <div class="col-md-4">
+                                <label class="labelgsubcode">City *</label>
+                                <div class="form-group">
+                                    <span class="col-md-12">
+                                        <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                            (click)="btnLookupCity()" data-toggle="modal" data-target="#lookupModalCity"
+                                            href="#" [disabled]="isDefault"><i class="fa fa-search-plus"></i></button>
+                                        {{model.city_name}}
+                                        <input type="hidden" class="form-control" [ngModel]="model.city_code"
+                                            name="p_city_code" required #city_code="ngModel">
+                                        <input type="hidden" class="form-control" [ngModel]="model.city_name"
+                                            name="p_city_name" required #city_name="ngModel">
+                                        <small
+                                            *ngIf="(city_code.errors?.required && city_code.touched) || (city_code.errors?.required && companyuserForm.submitted)"
+                                            class="text-danger">
+                                            City is required
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                            <!--#endregion Lookup city_code-->
+
+                            <!--#region paths [hidden]="this.tampHidden !== true"-->
+                            <div class="col-md-4" [hidden]="this.tampHidden !== true">
+                                <div class="form-group">
+                                    <label>Upload Photo</label>
+                                    <div class="row" style="margin-left: 30px;">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div [hidden]="this.tampHidden === true">
+                                                <span class="btn btn-info btn-round btn-file ">
+                                                    <input type="file" (change)="onUpload($event)" />
+                                                    <span><i class="fa fa-check"></i></span>
+                                                </span>
+                                                {{tempFile}}
+                                            </div>
+                                            <div>
+                                                <span [hidden]="this.tampHidden !== true">
+                                                    <a class="btn btn-danger btn-round btn-file " type="button"
+                                                        (click)="deleteImage(model.paths)" [hidden]="isDefault">
+                                                        <span><i class="fa"></i>Delete</span></a>
+                                                    <a class="btn btn-primary btn-round btn-file " type="button"
+                                                        (click)="priviewFile(model.file_name, model.paths)">
+                                                        <span><i class="fa"></i>View</span></a>
+                                                </span>
+                                                <div> {{model.file_name}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion paths [hidden]="this.tampHidden !== false"-->
+
+
+                            <!--#region module-->
+                            <!-- <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Module</label>
+                                    <select id="module" class="form-control col-md-6" [ngModel]="model.module"
+                                        name="p_module" [disabled]="isDefault">
+                                        <option value="ALL">ALL</option>
+                                        <option value="SALES">SALES</option>
+                                        <option value="COLLECTION">COLLECTION</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!--#endregion module-->
+
+
+                            <!--#region last_login_date-->
+                            <div class="col-md-4">
+                                <div class="form-group col-md-8" style="margin-left: -15px;">
+                                    <label for="last_login_date" class="control-label">Last Login</label>
+                                    <input id="dateHeader" [ngStyle]="getStyles(isReadOnly)"
+                                        class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.last_login_date" name="p_last_login_date"
+                                        [options]="myDatePickerOptions" #p_last_login_date="ngModel"
+                                        #last_login_date="angular-mydatepicker" autocomplete="off" readonly />
+                                </div>
+                            </div>
+                            <!--#endregion last_login_date-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region last fail count-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="last_fail_count">Last Fail Count</label>
+                                    <div class="col-md-4" style="margin-left: -15px;">
+                                        <input type="text" class="form-control" [ngModel]="model.last_fail_count"
+                                            name="p_last_fail_count" #last_fail_count="ngModel"
+                                            pattern={{NumberOnlyPattern}} readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion last_fail_count-->
+
+                            <!--#region next change pass-->
+                            <div class="col-md-4">
+                                <div class="form-group col-md-8" style="margin-left: -15px;">
+                                    <label for="next_change_pass" class="control-label">Next change Password</label>
+                                    <input id="dateHeader" [ngStyle]="getStyles(isReadOnly)"
+                                        class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.next_change_pass" name="p_next_change_pass"
+                                        [options]="myDatePickerOptions" #p_next_change_pass="ngModel"
+                                        #next_change_pass="angular-mydatepicker" autocomplete="off" readonly />
+                                </div>
+                            </div>
+                            <!--#endregion next change pass-->
+
+                            <!--#region is_active-->
+                            <div class="col-md-4">
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" name="p_is_active"
+                                                [ngModel]="model.is_active" disabled> Active
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion is_active-->
+
+                            <!--#region is_default-->
+                            <div class="col-md-4" hidden>
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" name="p_is_default"
+                                                [ngModel]="model.is_default"> Default
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion is_default-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                    <!--#endregion form-->
+                </div>
+                <!--#region wizard-->
+                <div class="wizard-custom-margin" [hidden]="param == null">
+                    <!--#region wizard container -->
+                    <div class="wizard-container">
+                        <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+                            id="wizardProfile">
+                            <div class="text-center">
+                                <div class="wizard-navigation">
+                                    <ul>
+                                        <!-- <li class="nav-item" id="targetSales">
+                                            <a class="nav-link" (click)="targetsalewiz()" href="#targetsalewizlist"
+                                                data-toggle="tab" role="tab" aria-controls="targetsalewizlist"
+                                                aria-selected="true">
+                                                Target Sales
+                                            </a>
+                                        </li> -->
+                                        <li class="nav-item">
+                                            <a class="nav-link" (click)="grouprolewiz()" href="#grouprolewizlist"
+                                                data-toggle="tab" role="tab" aria-controls="grouprolewizlist"
+                                                aria-selected="true">
+                                                Group Role
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" (click)="loginlogwiz()" href="#loginlogwizlist"
+                                                data-toggle="tab" role="tab" aria-controls="loginlogwizlist"
+                                                aria-selected="true">
+                                                Login Log
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--endregion wizard-->
+                <router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup MainTask-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMainTask"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupMainTask" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting" style="display: none;"></th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupMainTask;let i=index">
+                                    <td style="text-align: center;">{{lookupMainTask.numberIndex+i+1}}</td>
+                                    <td class="disabled-sorting" style="display: none;"></td>
+                                    <td style="width: 100%;">{{row.description}}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowMainTask(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup MainTask-->
+
+<!--#region lookup Province-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalProvince"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupProvince" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="display: none;"></th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupProvince;let i=index">
+                                    <td style="text-align: center;">{{lookupProvince.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td>{{row.description}}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowProvince(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Province-->
+
+<!--#region lookup City-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCity" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupCity" class="table table-striped table-bordered hover" cellspacing="0"
+                            style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="display: none;"></th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupCity;let i=index">
+                                    <td style="text-align: center;">{{lookupCity.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td>{{ row.description }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowCity(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup City-->

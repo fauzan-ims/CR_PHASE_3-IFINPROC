@@ -1,0 +1,230 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanel" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <!--#region watermark-->
+                <div class="watermark" [hidden]="this.isWatermark === '0'">
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+                <div class="card-header">
+                    <h4 class="card-title">Order Request List</h4>
+                </div>
+                <div class="card-body">
+                    <!--#region button Upload-->
+                    <div class="toolbar">
+                        <!--#region button save-->
+                        <button [hidden]="this.tampStatusType != 'HOLD'" class="btn btn-success btn-round"
+                            (click)="btnProceed()" data-role="R00022390002239O">
+                            Proceed
+                        </button>
+                        <button hidden type="button" class="btn btn-warning btn-round" (click)="btnReject()"
+                            data-role="R00022390012240R">Reject</button>
+                        <button [hidden]="this.tampStatusType != 'HOLD'" type="button" class="btn btn-warning btn-round"
+                            (click)="btnReturn()" data-role="R00022390012241R">Return</button>
+                        <!--#endregion button save-->
+                    </div>
+                    <!--#endregion button Upload-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region branch_code-->
+                        <div class="col-md-4" hidden>
+                            <div class="form-group">
+                                <label class="labelmodule" (click)="btnClearGroup()" style="cursor: pointer;"
+                                    title="Clear">Branch</label>
+                                <div class="col-md-12">
+                                    <span>
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupBranch()" data-toggle="modal"
+                                            data-target="#lookupModalBranch" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.branch_name}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion lookup branch_code -->
+
+                        <!--#region Status Type-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control col-md-6" [ngModel]="this.tampStatusType"
+                                    (change)="PageStatusType($event)">
+                                    <option value='ALL'>ALL</option>
+                                    <option value='HOLD'>HOLD</option>
+                                    <option value='POST'>POST</option>
+                                    <option value='CANCEL'>CANCEL</option>
+                                    <!-- <option value='REJECT'>REJECT</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <!--#endregion Status Type-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!--#region list view-->
+                    <table id="datatables" datatable [dtOptions]="dtOptions"
+                        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="disabled-sorting">No</th>
+                                <th class="disabled-sorting">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="checkall"
+                                                [(ngModel)]="selectedAll" (change)="selectAllTable()"
+                                                name="selectAll" />
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </th>
+                                <th>Selection Code / Supplier</th>
+                                <th>Date</th>
+                                <th>Item / Spesification</th>
+                                <th>Qty / Unit From</th>
+                                <th>Unit Price / Discount (Unit) / Nett Amount</th>
+                                <th>PPN/ PPH/ Total Amount</th>
+                                <th>Remark</th>
+                                <th>BBN Name/BBN Location/BBN Address</th>
+                                <th>Deliver To Address</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of listpoprocess;  let i=index">
+                                <td style="text-align: center;">{{listpoprocess.numberIndex+i+1}}</td>
+                                <td class="disabled-sorting">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                                (change)="checkIfAllTableSelected($event, row.id);">
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <input hidden name="p_id_doc" [ngModel]="row.id">
+                                </td>
+                                <td style="text-align: left; width: 15%">{{row.code}} <br> {{row.supplier_name_po}}</td>
+                                <td style="text-align: center; width: 5%">{{row.selection_date}} </td>
+                                <td style="text-align: left; width: 10%">{{row.item_name_po}} <br> {{
+                                    row.spesification}} </td>
+                                <td style="text-align: center; width: 10%"> {{ row.quantity_po}} <br> {{row.unit_from}}
+                                    <br> {{row.procurement_type}} {{row.manual_opl}}
+                                </td>
+                                <td style="text-align: right; width: 10%">{{row.price_amount | number : '1.2-2'}} <br>
+                                    {{row.discount_amount | number : '1.2-2'}} <br>
+                                    {{row.total_amount | number : '1.2-2'}} </td>
+
+                                <td style="text-align: right; width: 10%">{{row.ppn_amount | number : '1.2-2'}} <br>
+                                    {{row.pph_amount | number : '1.2-2'}} <br> {{row.total_amount + row.ppn_amount -
+                                    row.pph_amount |
+                                    number : '1.2-2'}}</td>
+                                <td style="text-align: left; width: 10%"> {{ row.remark}} </td>
+                                <td style="text-align: left; width: 10%"> {{ row.bbn_name}} <br> {{ row.bbn_location}}
+                                    <br> {{ row.bbn_address}}
+                                </td>
+                                <td style="text-align: left; width: 10%"> {{ row.deliver_to_address}} </td>
+                                <td style="text-align: center; width: 5%"> {{ row.supplier_selection_detail_status}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--#endregion list view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--#region lookup Vendor-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendor"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupVendor" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupvendor;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupvendor.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowVendor(row.code, row.name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Vendor -->
+
+<!--#region lookup Branch -->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranch"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupBranch" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="display: none;"></th>
+                                    <th>Code</th>
+                                    <th>Branch</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupbranch;let i=index">
+                                    <td style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="width: 30%; text-align: center;">{{row.code}}</td>
+                                    <td style="width: 70%; text-align: left;">{{row.name}}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Branch-->

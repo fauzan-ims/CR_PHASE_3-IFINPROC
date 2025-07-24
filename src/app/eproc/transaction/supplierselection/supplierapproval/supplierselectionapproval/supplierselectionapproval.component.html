@@ -1,0 +1,496 @@
+<div class="main-content" style="overflow-y:scroll; overflow-x:hidden;height:100%;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-header">
+        <h5 class="card-title">Supplier Selection Approval Info</h5>
+      </div>
+      <div class="card-body">
+        <!--#region div-->
+        <div class="row">
+          <!--#region code-->
+          <div class="col-md-4">
+            <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+              <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+              <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                Generate-</h1>
+            </div>
+            <div [hidden]="model.code == null" class="form-group">
+              <label>Code</label>
+              <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+            </div>
+          </div>
+          <!--#endregion code-->
+
+          <!--#region company_code-->
+          <input type="text" class="form-control" [ngModel]="model.company_code" maxlength="50" name="p_company_code"
+            #company_code="ngModel" hidden>
+          <!--#endregion company_code-->
+
+          <!--#region quotation_code-->
+          <input type="text" class="form-control" [ngModel]="model.quotation_code" maxlength="50"
+            name="p_quotation_code" #quotation_code="ngModel" hidden>
+          <!--#endregion quotation_code-->
+
+          <!--#region branch_code-->
+          <div class="col-md-4">
+            <label class="labelmodule">Branch</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    data-target="#lookupModalBranchCode" data-toggle="modal" href="#"
+                    [disabled]="this.tampdHidden || param !== null">
+                    <i class="fa fa-search-plus"></i></button> {{model.branch_name}}
+                  <input type="hidden" name="p_branch_code" [ngModel]="model.branch_code" #branch_code="ngModel" />
+                  <input type="hidden" name="p_branch_name" [ngModel]="model.branch_name" #branch_name="ngModel" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion branch_code-->
+
+          <!--#region status-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="status" class="control-label">Status</label>
+              <input [disabled]="model.status != 'HOLD'" maxlength="20" type="text" class="form-control"
+                [ngModel]="model.status" name="p_status" readonly>
+            </div>
+          </div>
+          <!--#endregion status-->
+
+          <!--#region selection_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="selection_date" class="control-label">Selection date *</label>
+              <div>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.selection_date" name="p_selection_date" [options]="myDatePickerOptions" required
+                  #p_selection_date="ngModel" #selection_date="angular-mydatepicker" autocomplete="off"
+                  (click)="selection_date.toggleCalendar()" [ngStyle]="getStyles(true)"
+                  [readonly]="this.tampdHidden || param !== null" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion selection_date-->
+
+          <!--#region division_code-->
+          <div class="col-md-4">
+            <label class="labelmodule">Division</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    data-target="#lookupModalDivisionCode" data-toggle="modal" href="#"
+                    [disabled]="this.tampdHidden || param !== null">
+                    <i class="fa fa-search-plus"></i></button> {{model.division_name}}
+                  <input type="hidden" name="p_division_code" [ngModel]="model.division_code" required
+                    #division_code="ngModel" />
+                  <input type="hidden" name="p_division_name" [ngModel]="model.division_name" required
+                    #division_name="ngModel" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion division_code-->
+
+          <!--#region department_code-->
+          <div class="col-md-4">
+            <label class="labelmodule">Department</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    data-target="#lookupModalDepartmentCode" data-toggle="modal" href="#"
+                    [disabled]="this.tampdHidden || param !== null">
+                    <i class="fa fa-search-plus"></i></button> {{model.department_name}}
+                  <input type="hidden" name="p_department_code" [ngModel]="model.department_code" required
+                    #department_code="ngModel" />
+                  <input type="hidden" name="p_department_name" [ngModel]="model.department_name" required
+                    #department_name="ngModel" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion department_code-->
+
+          <!--#region sub_department_code-->
+          <!-- <div class="col-md-4">
+                  <label class="labelmodule">Sub Department</label>
+                  <div class="form-group">
+                    <div class="col-md-12">
+                      <span>
+                        <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                          (click)="btnLookupSubDepartmentCode(this.model.division_code, this.model.department_code)"
+                          data-target="#lookupModalSubDepartmentCode" data-toggle="modal" href="#"
+                          [disabled]="this.tampdHidden || param !== null">
+                          <i class="fa fa-search-plus"></i></button> {{model.sub_department_name}}
+                        <input type="hidden" name="p_sub_department_code" [ngModel]="model.sub_department_code" required
+                          #sub_department_code="ngModel" />
+                        <input type="hidden" name="p_sub_department_name" [ngModel]="model.sub_department_name" required
+                          #sub_department_name="ngModel" />
+                      </span>
+                    </div>
+                    <small
+                      *ngIf="sub_department_code.errors?.required && sub_department_code.touched || (sub_department_code.errors?.required && quotationReviewForm.submitted)"
+                      class="text-danger">
+                      Sub Department is required
+                    </small>
+                  </div>
+                </div> -->
+          <!--#endregion sub_department_code-->
+
+          <!--#region unit_code-->
+          <!-- <div class="col-md-4">
+                  <label class="labelmodule">Unit</label>
+                  <div class="form-group">
+                    <div class="col-md-12">
+                      <span>
+                        <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                          (click)="btnLookupUnitCode(this.model.division_code, this.model.department_code, this.model.sub_department_code)"
+                          data-target="#lookupModalUnitCode" data-toggle="modal" href="#"
+                          [disabled]="this.tampdHidden || param !== null">
+                          <i class="fa fa-search-plus"></i></button> {{model.unit_name}}
+                        <input type="hidden" name="p_unit_code" [ngModel]="model.unit_code" required
+                          #unit_code="ngModel" />
+                        <input type="hidden" name="p_unit_name" [ngModel]="model.unit_name" required
+                          #unit_name="ngModel" />
+                      </span>
+                    </div>
+                    <small
+                      *ngIf="unit_code.errors?.required && unit_code.touched || (unit_code.errors?.required && quotationReviewForm.submitted)"
+                      class="text-danger">
+                      Unit is required
+                    </small>
+                  </div>
+                </div> -->
+          <!--#endregion unit_code-->
+
+          <!--#region remark-->
+          <div class="col-md-4">
+            <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+              <label for="remark" class="control-label">Remark *</label>
+              <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark" maxlength="4000"
+                required #remark="ngModel" readonly></textarea>
+            </div>
+          </div>
+          <!--#endregion remark-->
+        </div>
+        <!--#endregion div-->
+      </div>
+
+      <span layout="row horizontal-divider">
+        <hr flex />
+      </span>
+
+      <!--#region list view-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card-header">
+            <h5 class="card-title">Quotation Approval Info</h5>
+          </div>
+          <div class="card-body">
+            <!--#region list view-->
+            <table id="datatablesquotationreview" datatable [dtOptions]="dtOptionsQuo"
+              class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display:none ;"></th>
+                  <th>Procurement Code</th>
+                  <th>Item</th>
+                  <th>QTY</th>
+                  <th>BBN Name/BBN Location/BBN Address</th>
+                  <th>Deliver To Address</th>
+                  <th>Spesification</th>
+                  <th>Remark</th>
+                  <th style="text-align: center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of quotationReviewDetailList;let i = index">
+                  <td style="text-align: center">{{ quotationReviewDetailList.numberIndex + i + 1 }}</td>
+                  <td style="display:none ;"></td>
+                  <td style="text-align: left; width: 10%"> {{ row.reff_no }}</td>
+                  <td style="text-align: left; width: 15%">{{ row.item_name }}</td>
+                  <td style="text-align: center; width: 10%">{{ row.quantity }} <br> {{
+                    row.uom_name }}</td>
+                  <td style="text-align: left; width: 20%">{{ row.bbn_name }} <br> {{ row.bbn_location }} <br>
+                    {{ row.bbn_address }}</td>
+                  <td style="text-align: left; width: 15%">{{ row.deliver_to_address }}</td>
+                  <td style="text-align: left; width: 15%">{{ row.spesification }}</td>
+                  <td style="text-align: left; width: 15%">{{ row.remark }}
+                  </td>
+                  <td style="text-align: center">
+                    <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                        class="fa fa-edit"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--#endregion list view-->
+          </div>
+        </div>
+      </div>
+
+      <span layout="row horizontal-divider">
+        <hr flex />
+      </span>
+
+      <!--#region list view-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card-header">
+            <h5 class="card-title">Quotation Vendor Info</h5>
+          </div>
+          <div class="card-body">
+            <!--#region list view-->
+            <table id="datatablesquotationvendor" datatable [dtOptions]="dtOptionsQuoVendor"
+              class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display:none ;"></th>
+                  <th>Supplier</th>
+                  <th>Tax</th>
+                  <th>Warranty / Warranty Part</th>
+                  <th>Unit Price</th>
+                  <th>Discount</th>
+                  <th>Nett Price</th>
+                  <th style="text-align: center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of quotationReviewVendorList;let i = index">
+                  <td style="text-align: center">{{ quotationReviewVendorList.numberIndex + i + 1 }}</td>
+                  <td style="display:none ;"></td>
+                  <td style="text-align: left; width: 25%">{{ row.supplier_name }}</td>
+                  <td style="text-align: left; width: 15%">{{ row.tax_name }}</td>
+                  <td style="text-align: left; width: 15%"> {{ row.warranty_month }} <br> {{
+                    row.warranty_part_month }}</td>
+                  <td style="text-align: right; width: 15%">{{ row.price_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right; width: 15%">{{ row.discount_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right; width: 15%">{{ row.nett_price | number : '1.2-2'}}</td>
+                  <!-- <td style="text-align: left; width: 10%">{{ row.spesification }}</td>
+                  <td style="text-align: left; width: 10%">{{ row.remark }} -->
+                  <!-- </td> -->
+                  <td style="text-align: center">
+                    <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                      (click)="btnEditVendor(row.id)"><i class="fa fa-edit"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--#endregion list view-->
+          </div>
+        </div>
+      </div>
+
+
+      <span layout="row horizontal-divider">
+        <hr flex />
+      </span>
+
+      <!--#region list view-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card-header">
+            <h5 class="card-title">Supplier Selection Item List</h5>
+          </div>
+          <div class="card-body">
+            <!--#region list view-->
+            <table id="datatablesuppliercoldetail" datatable [dtOptions]="dtOptions"
+              class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>Supplier</th>
+                  <th>Item/ Remark</th>
+                  <th>QTY</th>
+                  <th>Unit Amount / Amount Exc VAT/ Discount</th>
+                  <th>Unit Price / Discount (Unit) / Nett Amount</th>
+                  <th>Tax / PPN / PPH / Total Amount</th>
+                  <th>Offering</th>
+                  <th>BBN Name/BBN Location/BBN Address</th>
+                  <th>Deliver To Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of supplierColDetailList;let i=index ">
+                  <!-- <td style="text-align: center;">
+                    {{supplierColDetailList.numberIndex+i+1}}</td> -->
+                  <td style="text-align: center"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    {{ supplierColDetailList.numberIndex + i + 1 }}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: left; width: 10%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    <div class="form-group" [hidden]="this.isDisabled2">
+                      <div class="col-md-12 buttons">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupVendorQuotation(row.id, row.procurement_code)"
+                            data-target="#lookupModalVendorWithQuotation" data-toggle="modal" href="#" disabled>
+                            <i class="fa fa-search-plus"></i>
+                          </button> {{row.supplier_name}}
+                          <input hidden name="p_supplier_code" value="{{row.supplier_code}}" />
+                          <input hidden name="p_supplier_name" value="{{row.supplier_name}}" />
+                        </span>
+                      </div>
+                    </div>
+                    <div class="form-group" [hidden]="this.isDisabled">
+                      <div class="col-md-12 buttons">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupVendor(row.id)" data-target="#lookupModalVendor" data-toggle="modal"
+                            href="#" disabled>
+                            <i class="fa fa-search-plus"></i>
+                          </button> {{row.supplier_name}}
+                          <input hidden name="p_supplier_code" value="{{row.supplier_code}}" />
+                          <input hidden name="p_supplier_name" value="{{row.supplier_name}}" />
+                          <input hidden name="p_supplier_address" value="{{row.supplier_address}}" />
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="text-align: left; width: 15%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">{{row.item_name
+                    }} <br> {{row.remark }}</td>
+                  <td style="text-align: center; width: 10%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">{{row.quantity}}
+                    <br> {{row.unit_from }}
+                  </td>
+                  <td style="text-align: right; width: 10%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    {{row.otr_amount | number : '1.2-2'}} <br> {{row.asset_amount | number : '1.2-2'}} <br>
+                    {{row.asset_discount_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right; width: 15%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    <div class="form-group">
+                      <input type="hidden" value="{{row.id}}" name="p_id">
+                      <input class="form-control" disabled id="amount{{i}}" (blur)="onBlurAmount($event,i,'amount')"
+                        (change)="amount($event, row.id, row.quantity, row.discount_amount)"
+                        (focus)="onFocusAmount($event,i,'amount')" class="text-right" type="text"
+                        value="{{row.amount | number : '1.2-2'}}" amount="amount" name="p_amount">
+                    </div>
+                    <!-- <br> -->
+                    <div class="form-group">
+                      <input type="hidden" value="{{row.id}}" name="p_id">
+                      <input class="form-control" disabled id="discount_amount{{i}}"
+                        (blur)="onBlurAmount($event,i,'discount_amount')"
+                        (change)="discountamount($event, row.id, row.amount, row.quantity)"
+                        (focus)="onFocusAmount($event,i,'discount_amount')" class="text-right" type="text"
+                        value="{{row.discount_amount | number : '1.2-2'}}" discount_amount="discount_amount"
+                        name="p_discount_amount">
+                    </div>
+                    <!-- <br> -->
+                    <div class="form-group">
+                      <input type="hidden" value="{{row.id}}" name="p_id">
+                      <input class="form-control" id="total_amount{{i}}" (blur)="onBlurTotalAmount($event,i,'amount')"
+                        (focus)="onFocusTotalAmount($event,i,'amount')" class="text-right" type="text"
+                        value="{{row.total_amount | number : '1.2-2'}}" disabled amount="total_amount"
+                        name="p_total_amount">
+                    </div>
+                  </td>
+                  <td style="text-align: right; width: 15%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    <div class="form-group">
+                      <div class="col-md-12 buttons">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupTaxCode(row.id)" data-target="#lookupModalTax" data-toggle="modal"
+                            href="#" disabled>
+                            <i class="fa fa-search-plus"></i>
+                          </button> {{row.tax_name}}
+                          <input hidden name="p_tax_code" value="{{row.tax_code}}" />
+                          <input hidden name="p_tax_name" value="{{row.tax_name}}" />
+                        </span>
+                      </div>
+                    </div>
+                    <br>
+                    {{ row.ppn_amount | number : '1.2-2'}}
+                    <br>
+                    {{row.pph_amount | number : '1.2-2'}}
+                    <br>
+                    {{row.total_amount+row.ppn_amount-row.pph_amount | number : '1.2-2'}}
+                  </td>
+                  <td style="text-align: left; width: 15%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">{{row.offering}}
+                  </td>
+                  <td style="text-align: left; width: 10%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    {{row.bbn_name}} <br> {{row.bbn_location}} <br> {{row.bbn_address}}</td>
+                  <td style="text-align: left; width: 10%;"
+                    [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                    {{row.deliver_to_address}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!--#endregion list view-->
+          </div>
+        </div>
+      </div>
+      <!--#endregion list view-->
+
+      <span layout="row horizontal-divider">
+        <hr flex />
+      </span>
+
+      <div class="row">
+        <div class="col-md-12">
+          <!-- <div class="card"> -->
+          <div class="card-header">
+            <h4 class="card-title">Document List</h4>
+          </div>
+          <div class="card-body">
+            <!--#region list view-->
+            <table id="datatablerequestdoc" datatable [dtOptions]="dtOptionsDoc"
+              class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>Document Name</th>
+                  <th>File Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of photolist;  let i=index">
+                  <td style="text-align: center;">{{photolist.numberIndex+i+1}}</td>
+                  <td style="display: none;">
+                  </td>
+                  <td style="width: 45%;">
+                    <textarea id="remark{{i}}" class="form-control" type="text" value="{{row.remark}}"
+                      name="p_remark_detail" readonly>
+                                </textarea>
+                  </td>
+                  <td style="width: 40%;">
+                    <a [hidden]="row.file_name === '' && row.file_name == null">{{row.file_name}}</a>
+                    <!-- <a [hidden]="row.file_name == '' && row.file_name == null">{{row.filenameupload}}</a> -->
+                    <input hidden name="p_file_path" [ngModel]="row.file_path">
+                  </td>
+                  <td style="text-align: center;" class="if-no-edit-btn">
+                    <span>
+                      <a [hidden]="row.file_name == '' || row.file_name == null"
+                        (click)="previewFile(row.file_name, row.file_path)" style="cursor: pointer;">
+                        Preview</a> <br>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--#endregion list view-->
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

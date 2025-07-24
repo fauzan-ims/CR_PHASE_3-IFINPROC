@@ -1,0 +1,210 @@
+<div class="main-content">
+  <div class="row">
+    <!-- <div class="col-md-4">
+      <div class="card card-user">
+        <div class="image">
+          <img src="./assets/img/bg/damir-bosnjak.jpg" alt="...">
+        </div>
+        <div class="card-body">
+          <div class="author">
+            <a href="#">
+              <img class="avatar border-gray" src="./assets/img/mike.jpg" alt="...">
+              <h5 class="title">Chet Faker</h5>
+            </a>
+            <p class="description">
+              @chetfaker
+            </p>
+          </div>
+          <p class="description text-center">
+            "I like the way you work it
+            <br> No diggity
+            <br> I wanna bag it up"
+          </p>
+        </div>
+        <div class="card-footer">
+          <hr>
+          <div class="button-container">
+            <div class="row">
+              <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                <h5>12
+                  <br>
+                  <small>Files</small>
+                </h5>
+              </div>
+              <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
+                <h5>2GB
+                  <br>
+                  <small>Used</small>
+                </h5>
+              </div>
+              <div class="col-lg-3 mr-auto">
+                <h5>24,6$
+                  <br>
+                  <small>Spent</small>
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Team Members</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled team-members">
+            <li>
+              <div class="row">
+                <div class="col-md-2 col-2">
+                  <div class="avatar">
+                    <img src="./assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  </div>
+                </div>
+                <div class="col-md-7 col-7">
+                  DJ Khaled
+                  <br />
+                  <span class="text-muted">
+                    <small>Offline</small>
+                  </span>
+                </div>
+                <div class="col-md-3 col-3 text-right">
+                  <button class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></button>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row">
+                <div class="col-md-2 col-2">
+                  <div class="avatar">
+                    <img src="./assets/img/faces/joe-gardner-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  </div>
+                </div>
+                <div class="col-md-7 col-7">
+                  Creative Tim
+                  <br />
+                  <span class="text-success">
+                    <small>Available</small>
+                  </span>
+                </div>
+                <div class="col-md-3 col-3 text-right">
+                  <button class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></button>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row">
+                <div class="col-md-2 col-2">
+                  <div class="avatar">
+                    <img src="./assets/img/faces/clem-onojeghuo-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  </div>
+                </div>
+                <div class="col-ms-7 col-7">
+                  Flume
+                  <br />
+                  <span class="text-danger">
+                    <small>Busy</small>
+                  </span>
+                </div>
+                <div class="col-md-3 col-3 text-right">
+                  <button class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+    </div> -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5>Change Password</h5>
+        </div>
+        <div class="card-body">
+          <form #changepassForm="ngForm" (ngSubmit)="onFormSubmit(changepassForm.value, changepassForm.valid)">
+
+            <!-- #region radio button -->
+            <div class="row">
+              <div class="col-md-4">
+                <label>Password Type</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_password_type" value="LOGIN"
+                          [(ngModel)]="model.password_type">LOGIN
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div>
+                      <div class="form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="p_password_type" value="APPROVAL"
+                            [(ngModel)]="model.password_type">APPROVAL
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #endregion radio button -->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Old Password-->
+              <div class="col-md-7">
+                <div class="form-group">
+                  <label for="old_password" class="control-label">Old Password *</label>
+                  <input type="password" class="form-control" [ngModel]="model.old_pasword" name="p_old_password"
+                    required #old_password="ngModel">
+                  <small *ngIf="((old_password.errors?.required && old_password.touched) || (old_password.errors?.required && changepassForm.submitted))" class="text-danger">
+                    Old Password is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Old Password-->
+
+              <!--#region New Password-->
+              <div class="col-md-7">
+                <div class="form-group">
+                  <label for="new_password" class="control-label">New Password *</label>
+                  <input type="password" class="form-control" [ngModel]="model.new_password" name="p_new_password"
+                    required #new_password="ngModel">
+                  <small *ngIf="(new_password.errors?.required && new_password.touched) || (new_password.errors?.required && changepassForm.submitted)" class="text-danger">
+                    New Password is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion New Password-->
+
+              <!--#region check box Base Currency-->
+              <div class="col-md-7">
+                <div class="form-group">
+                  <label for="re_new_password" class="control-label">Re-enter Your New Password *</label>
+                  <input type="password" class="form-control" name="p_re_new_password" [ngModel]="model.re_new_password"
+                    required #re_new_password="ngModel">
+                  <small *ngIf="(re_new_password.errors?.required && re_new_password.touched) || (re_new_password.errors?.required && changepassForm.submitted)" class="text-danger">
+                    Re New Password is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion check box Base Currency -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region button submit dan back data-role="R0000034C"-->
+            <button type="submit" ng-disabled="changepassForm.$invalid" style="margin-left: 0px;"
+              class="btn btn-info btn-round custom-button-width">Change Password</button>
+            <!-- <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button> -->
+            <!--#endregion button submit dan back-->
+
+            <!--#endregion row-->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

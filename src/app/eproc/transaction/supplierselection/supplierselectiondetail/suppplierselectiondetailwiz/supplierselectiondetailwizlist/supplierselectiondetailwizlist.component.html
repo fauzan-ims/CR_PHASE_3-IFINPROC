@@ -1,0 +1,319 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <div class="toolbar">
+                    <!--#region button-->
+                    <!-- <button class="btn btn-info btn-round" (click)="btnAdd()" data-role="R00015290001530C"
+                      [hidden]="this.tampHiddenStatus">
+                      Add
+                    </button> -->
+                    <!-- <button type="button" class="btn btn-info btn-round" (click)="btnSaveList()"
+                      data-role="R00015290001530C" [hidden]="this.tampHiddenStatus">
+                      Save
+                    </button> -->
+                    <!--#endregion button-->
+                    <button hidden id="supplier_item" type="button" (click)="callGetrowHeader()"></button>
+
+                </div>
+                <!--#region list view-->
+                <table id="datatablesuppliercoldetail" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th style="display: none;"></th>
+                            <th>Supplier</th>
+                            <th>Item/ Remark</th>
+                            <th>QTY</th>
+                            <th>Unit Amount / Amount Exc VAT/ Discount</th>
+                            <th>Unit Price / Discount (Unit) / Nett Amount</th>
+                            <th>Tax / PPN / PPH / Total Amount</th>
+                            <th>Offering</th>
+                            <th>BBN Name/BBN Location/BBN Address</th>
+                            <th>Deliver To Address</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of supplierColDetailList;let i=index ">
+                            <!-- <td style="text-align: center;">
+                                {{supplierColDetailList.numberIndex+i+1}}</td> -->
+                            <td style="text-align: center"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{ supplierColDetailList.numberIndex + i + 1 }}</td>
+                            <td class="if-no-edit-btn" style="display: none;"></td>
+                            <td style="text-align: left; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                <div class="form-group" [hidden]="this.isDisabled2">
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button"
+                                                (click)="btnLookupVendorQuotation(row.id, row.procurement_code)"
+                                                data-target="#lookupModalVendorWithQuotation" data-toggle="modal"
+                                                href="#" [disabled]="this.tampHiddenStatus">
+                                                <i class="fa fa-search-plus"></i>
+                                            </button> {{row.supplier_name}}
+                                            <input hidden name="p_supplier_code" value="{{row.supplier_code}}" />
+                                            <input hidden name="p_supplier_name" value="{{row.supplier_name}}" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" [hidden]="this.isDisabled">
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" (click)="btnLookupVendor(row.id)"
+                                                data-target="#lookupModalVendor" data-toggle="modal" href="#"
+                                                [disabled]="this.tampHiddenStatus">
+                                                <i class="fa fa-search-plus"></i>
+                                            </button> {{row.supplier_name}}
+                                            <input hidden name="p_supplier_code" value="{{row.supplier_code}}" />
+                                            <input hidden name="p_supplier_name" value="{{row.supplier_name}}" />
+                                            <input hidden name="p_supplier_address" value="{{row.supplier_address}}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="text-align: left; width: 15%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.item_name }} <br> {{row.remark }}</td>
+                            <td style="text-align: center; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.quantity}} <br> {{row.unit_from }}</td>
+                            <td style="text-align: right; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.otr_amount | number : '1.2-2'}} <br> {{row.asset_amount | number : '1.2-2'}} <br>
+                                {{row.asset_discount_amount | number : '1.2-2'}}</td>
+                            <td style="text-align: right; width: 15%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                <div class="form-group">
+                                    <input type="hidden" value="{{row.id}}" name="p_id">
+                                    <input class="form-control" [disabled]="this.tampHiddenStatus || this.isDisabled"
+                                        id="amount{{i}}" (blur)="onBlurAmount($event,i,'amount')"
+                                        (change)="amount($event, row.id, row.quantity, row.discount_amount)"
+                                        (focus)="onFocusAmount($event,i,'amount')" class="text-right" type="text"
+                                        value="{{row.amount | number : '1.2-2'}}" amount="amount" name="p_amount">
+                                </div>
+                                <!-- <br> -->
+                                <div class="form-group">
+                                    <input type="hidden" value="{{row.id}}" name="p_id">
+                                    <input class="form-control" [disabled]="this.tampHiddenStatus || this.isDisabled"
+                                        id="discount_amount{{i}}" (blur)="onBlurAmount($event,i,'discount_amount')"
+                                        (change)="discountamount($event, row.id, row.amount, row.quantity)"
+                                        (focus)="onFocusAmount($event,i,'discount_amount')" class="text-right"
+                                        type="text" value="{{row.discount_amount | number : '1.2-2'}}"
+                                        discount_amount="discount_amount" name="p_discount_amount">
+                                </div>
+                                <!-- <br> -->
+                                <div class="form-group">
+                                    <input type="hidden" value="{{row.id}}" name="p_id">
+                                    <input class="form-control" id="total_amount{{i}}"
+                                        (blur)="onBlurTotalAmount($event,i,'amount')"
+                                        (focus)="onFocusTotalAmount($event,i,'amount')" class="text-right" type="text"
+                                        value="{{row.total_amount | number : '1.2-2'}}" disabled amount="total_amount"
+                                        name="p_total_amount">
+                                </div>
+                            </td>
+                            <td style="text-align: right; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                <div class="form-group">
+                                    <div class="col-md-12 buttons">
+                                        <span>
+                                            <button class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                type="button" (click)="btnLookupTaxCode(row.id)"
+                                                data-target="#lookupModalTax" data-toggle="modal" href="#"
+                                                [disabled]="this.tampHiddenStatus || this.isDisabled">
+                                                <i class="fa fa-search-plus"></i>
+                                            </button> {{row.tax_name}}
+                                            <input hidden name="p_tax_code" value="{{row.tax_code}}" />
+                                            <input hidden name="p_tax_name" value="{{row.tax_name}}" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <br>
+                                {{ row.ppn_amount | number : '1.2-2'}}
+                                <br>
+                                {{row.pph_amount | number : '1.2-2'}}
+                                <br>
+                                {{row.total_amount+row.ppn_amount-row.pph_amount | number : '1.2-2'}}
+                            </td>
+                            <td style="text-align: left; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.offering}}</td>
+                            <td style="text-align: left; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.bbn_name}} <br> {{row.bbn_location}} <br> {{row.bbn_address}}</td>
+                            <td style="text-align: left; width: 10%;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                {{row.deliver_to_address}}</td>
+                            <td style="text-align: center;"
+                                [ngStyle]="{'backgroundColor': (row.marketing_amount == '1') ? '#f3cccc' : 'none'}">
+                                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                    (click)="btnEdit(row.id)">
+                                    <i class="fa fa-edit"></i></a>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup Tax-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalTax" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupTax" class="table table-striped table-bordered hover" cellspacing="0"
+                            style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Description</th>
+                                    <th>PPN (%)</th>
+                                    <th>PPH (%)</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupTax;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupTax.numberIndex+i+1}}</td>
+                                    <td style="width: 70%;">{{ row.name }}</td>
+                                    <td style="width: 15%;">{{ row.ppn_pct | number : '1.6-6'}}</td>
+                                    <td style="width: 15%;">{{ row.pph_pct | number : '1.6-6'}}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowTax(row.code, row.name, row.ppn_pct, row.pph_pct)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Tax -->
+
+<!--#region lookup Vendor-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendor"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupVendor" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupvendor;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupvendor.numberIndex+i+1}}</td>
+                                    <!-- <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.name }}</td> -->
+                                    <td style="width: 20%;text-align: center;">{{ row.vendorCode }}</td>
+                                    <td style="width: 80%;">{{ row.vendorName }}</td>
+                                    <!-- <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowVendor(row.vendorCode, row.vendorName, row.address)">Select</button>
+                                    </td> -->
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowVendor(row.vendorId, row.vendorName, row.vendorAddr, row.taxIdNo)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Vendor -->
+
+<!--#region lookup Vendor 2-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendorWithQuotation"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupVendorWithQuotation" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="display: none;"></th>
+                                    <th>Supplier</th>
+                                    <th>Unit Price / Discount</th>
+                                    <th>Nett Price</th>
+                                    <th>QTY</th>
+                                    <th>Offering</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupvendorwithquotation;let i=index ">
+                                    <td style="text-align: center;">{{lookupvendorwithquotation.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td style="width: 20%;text-align: left;">{{ row.supplier_name }}</td>
+                                    <td style="width: 15%;text-align: right;">{{ row.price_amount | number : '1.2-2'}}
+                                        <br> {{
+                                        row.discount_amount | number : '1.2-2'}}
+                                    </td>
+                                    <td style="width: 15%;text-align: right;">{{ row.nett_price | number : '1.2-2'}}
+                                    </td>
+                                    <td style="width: 15%;text-align: center;">{{ row.quantity }}</td>
+                                    <td style="width: 35%;text-align: left;">{{ row.offering }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowVendorQuotation(row.supplier_code, row.supplier_name, row.supplier_address, row.supplier_npwp, row.price_amount, row.quantity, row.tax_code, row.tax_name, row.discount_amount
+                      , row.ppn_pct, row.pph_pct, row.unit_available_status, row.indent_days, row.offering)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Vendor 2-->

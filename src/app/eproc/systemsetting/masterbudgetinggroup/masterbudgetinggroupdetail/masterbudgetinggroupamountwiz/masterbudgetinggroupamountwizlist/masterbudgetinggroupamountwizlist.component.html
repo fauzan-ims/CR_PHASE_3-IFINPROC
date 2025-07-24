@@ -1,0 +1,334 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="toolbar">
+                <!--#region button add--->
+                <button [hidden]="this.param == null || model.status !== 'NEW'" class="btn btn-info btn-round"
+                    type="button" (click)="btnLookupItem()" data-target="#lookupModalItem" data-toggle="modal" href="#"
+                    data-role="R00021490022149C">
+                    Add </button>
+                <button [hidden]="this.param == null || model.status !== 'NEW'" class="btn btn-info btn-round"
+                    (click)="btnSaveList()" data-role="R00021490042149C">
+                    Save
+                </button>
+                <button [hidden]="this.param == null || model.status !== 'NEW'"
+                    class="btn btn-info btn-round custom-button-width" (click)="btnDownload()"
+                    data-role="R00021490002150P">Download
+                    Template
+                </button>
+                <span [hidden]="this.param == null || model.status !== 'NEW'"
+                    class="btn btn-success btn-round btn-file custom-button-width">
+                    <input id="fileControl" type="file" accept=".xls, .xlsx" (change)="onUploadReader($event)"
+                        data-role="R00021490032149C" />
+                    <span>Upload Excel</span>
+                </span>{{tempFile}}
+                <button [hidden]="this.param == null || model.status !== 'NEW'" class="btn btn-danger btn-round"
+                    (click)="btnDeleteAll()" data-role="R00021490002150D">
+                    Delete
+                </button>
+                <!--#endregion button add--->
+            </div>
+
+            <!-- <input type="text" [ngModel]="model.status" name="p_status" hidden> -->
+
+            <div class="card-body">
+                <!-- <input type="text" [ngModel]="model.status" name="p_status" hidden> -->
+                <!--#region list view-->
+                <table id="datatableBudgetingAmountDetail" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                            [(ngModel)]="selectedAll" (change)="selectAllTable();" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th>Item Group</th>
+                            <th>Month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of listbudgetingamount;  let i=index">
+                            <td style="text-align: center;">{{listbudgetingamount.numberIndex+i+1}}</td>
+                            <td class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            (change)="checkIfAllTableSelected($event, row.id);">
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <input hidden name="p_id_amount" [ngModel]="row.id">
+                            </td>
+                            <td style="width: 20%;text-align: left;">{{row.item_group_name}}</td>
+                            <!-- <div class="form-group">
+                                <div class="col-md-12">
+                                    <button [disabled]="model.status !== 'NEW'"
+                                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                        type="button" (click)="btnLookupItemGroup(row.id)" data-toggle="modal"
+                                        data-target="#lookupModalItemGroup" href="#"><i
+                                            class="fa fa-search-plus"></i></button>
+                                    {{row.item_group_name}}
+                                    <input type="hidden" class="form-control" [ngModel]="model.item_group_code"
+                                        name="p_item_group_code" #item_group_code="ngModel">
+                                    <input type="hidden" class="form-control" [ngModel]="model.item_group_name"
+                                        name="p_item_group_name" #item_group_name="ngModel">
+                                </div>
+                            </div> -->
+                            <td style="width: 80%" class="if-no-edit-btn">
+                        <tr>
+                            <td style="vertical-align: text-bottom">JAN</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_jan_amount{{i}}"
+                                        (blur)="onBlurBudgetJanAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetJanAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_jan_amount | number : '1.2-2'}}"
+                                        amount="budget_jan_amount" name="p_budget_jan_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">FEB</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_feb_amount{{i}}"
+                                        (blur)="onBlurBudgetFebAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetFebAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_feb_amount | number : '1.2-2'}}"
+                                        amount="budget_feb_amount" name="p_budget_feb_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">MAR</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_mar_amount{{i}}"
+                                        (blur)="onBlurBudgetMarAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetMarAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_mar_amount | number : '1.2-2'}}"
+                                        amount="budget_mar_amount" name="p_budget_mar_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">APR</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_apr_amount{{i}}"
+                                        (blur)="onBlurBudgetAprAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetAprAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_apr_amount | number : '1.2-2'}}"
+                                        amount="budget_apr_amount" name="p_budget_apr_amount" style="width:85%">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: text-bottom">MEI</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_mei_amount{{i}}"
+                                        (blur)="onBlurBudgetMeiAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetMeiAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_mei_amount | number : '1.2-2'}}"
+                                        amount="budget_mei_amount" name="p_budget_mei_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">JUN</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_jun_amount{{i}}"
+                                        (blur)="onBlurBudgetJunAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetJunAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_jun_amount | number : '1.2-2'}}"
+                                        amount="budget_jun_amount" name="p_budget_jun_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">JUL</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_jul_amount{{i}}"
+                                        (blur)="onBlurBudgetJulAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetJulAMount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_jul_amount | number : '1.2-2'}}"
+                                        amount="budget_jul_amount" name="p_budget_jul_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">AUG</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_agt_amount{{i}}"
+                                        (blur)="onBlurBudgetAgtAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetAgtAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_agt_amount | number : '1.2-2'}}"
+                                        amount="budget_agt_amount" name="p_budget_agt_amount" style="width:85%">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: text-bottom">SEP</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_sep_amount{{i}}"
+                                        (blur)="onBlurBudgetSepAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetSepAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_sep_amount | number : '1.2-2'}}"
+                                        amount="budget_sep_amount" name="p_budget_sep_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">OCT</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_okt_amount{{i}}"
+                                        (blur)="onBlurBudgetOktAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetOktAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_okt_amount | number : '1.2-2'}}"
+                                        amount="budget_okt_amount" name="p_budget_okt_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">NOV</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_nov_amount{{i}}"
+                                        (blur)="onBlurBudgetNovAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetNovAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_nov_amount | number : '1.2-2'}}"
+                                        amount="budget_nov_amount" name="p_budget_nov_amount" style="width:85%">
+                                </div>
+                            </td>
+                            <td style="vertical-align: text-bottom">DES</td>
+                            <td style="text-align:right ;">
+                                <div class="form-group">
+                                    <input [disabled]="model.status !== 'NEW'" id="budget_des_amount{{i}}"
+                                        (blur)="onBlurBudgetDesAmount($event,i,'amount')"
+                                        (focus)="onFocusBudgetDesAmount($event,i,'amount')" class="text-right"
+                                        type="text" value="{{row.budget_des_amount | number : '1.2-2'}}"
+                                        amount="budget_des_amount" name="p_budget_des_amount" style="width:85%">
+                                </div>
+                            </td>
+                        </tr>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup Item-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalItem" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" (click)="btnLookupClose()" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <!--#region form-->
+                        <!-- <form #ItemForm="ngForm"
+                            (ngSubmit)="onFormSubmit(ItemForm.value, ItemForm.valid)">
+                        </form> -->
+                        <!--#endregion form-->
+
+                        <!--#region button add //data-role="R0000041U"-->
+                        <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()"
+                            data-role="R00021490022149C">
+                            add
+                        </button>
+                        <!--#endregion button add--->
+
+                        <table id="datatableLookupItem" class="table table-striped table-bordered hover" cellspacing="0"
+                            style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkallLookup"
+                                                    [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupItem;  let i=index">
+                                    <td style="text-align: center;">{{lookupItem.numberIndex+i+1}}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedLookup"
+                                                    (change)="checkIfAllLookupSelected($event, row.code);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;width: 40%;" class="if-no-edit-btn">{{ row.code }}
+                                    </td>
+                                    <td style="text-align: left;width: 600%;">{{ row.description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Item-->
+
+<!--#region modal lookup item group-->
+<div class="modal" id="lookupModalItemGroup" style="margin-top: -75px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width: 100%">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <form>
+                    <div class="col-md-12">
+                        <div class="card-body col-md-12" style="width: 100%">
+                            <table id="datatableLookupItemGroup" class="table table-striped table-bordered hover"
+                                cellspacing="0" style="min-width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="display: none;"></th>
+                                        <th class="disabled-sorting">No</th>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of lookupItemGroup;let i=index ">
+                                        <td class="if-no-edit-btn" style="display: none;"></td>
+                                        <td class="if-no-edit-btn" style="text-align: center;">
+                                            {{lookupItemGroup.numberIndex+i+1}}</td>
+                                        <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                                        <td style="width: 80%;">{{ row.description }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-outline-default btn-round"
+                                                (click)="btnSelectRowItemGroup(row.code, row.description)">Select</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup item group-->

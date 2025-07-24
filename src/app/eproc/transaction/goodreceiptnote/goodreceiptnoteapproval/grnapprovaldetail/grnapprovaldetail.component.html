@@ -1,0 +1,518 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h5 class="card-title">Good Receipt Note Approval Detail Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+         
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit, button back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <input hidden type="text" [ngModel]="this.param" name="p_good_receipt_note_code">
+              <input hidden type="text" [ngModel]="this.params" name="p_id">
+              <!--#endregion code-->
+
+              <!--#region item_code-->
+              <div class="col-md-4">
+                <label class="labelmodule">Item</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        data-target="#lookupModalItemCode" data-toggle="modal" href="#"
+                        disabled>
+                        <i class="fa fa-search-plus"></i></button> {{model.item_name}}
+                      <input type="hidden" name="p_item_code" [ngModel]="model.item_code" 
+                        #item_code="ngModel" />
+                      <input type="hidden" name="p_item_name" [ngModel]="model.item_name" 
+                        #item_name="ngModel" />
+                      <input type="hidden" name="p_type_asset_code" [ngModel]="model.type_asset_code"
+                        #type_asset_code="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion item_code-->
+
+              <!--#region Shipper-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="uom_name.invalid && uom_name.touched">
+                  <label for="uom_name" class="control-label">UOM</label>
+                  <input type="text" class="form-control" [ngModel]="model.uom_name" name="p_uom_name" maxlength="50"
+                    #uom_name="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion Shipper-->
+
+              <!--#region po_quantity-->
+              <div class="col-md-4" hidden>
+                <div class="form-group">
+                  <label class="control-label">PO Quantity</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-6"
+                    [ngModel]="model.po_quantity" name="p_po_quantity" maxlength="4"
+                    [readonly]="model.status !== 'HOLD' || this.params !== null" #po_quantity="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+              <!--#endregion po_quantity-->
+
+              <!--#region po_quantity-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Remaining Quantity</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-4"
+                    [ngModel]="model.po_quantity" name="p_po_quantity" maxlength="4"
+                    [readonly]="model.status !== 'HOLD' || this.params !== null" #po_quantity="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+              <!--#endregion po_quantity-->
+
+              <!--#region uom_code-->
+              <div class="col-md-4" hidden>
+                <label class="uom_code">UOM</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        data-target="#lookupModalUomCode" data-toggle="modal" href="#"
+                        [disabled]="this.params == null">
+                        <i class="fa fa-search-plus"></i></button> {{model.uom_name}}
+                      <input type="hidden" name="p_uom_code" [ngModel]="model.uom_code" #uom_code="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion uom_code-->
+
+              <!--#region receive_quantity-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Receive Quantity *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-4"
+                    [ngModel]="model.receive_quantity" name="p_receive_quantity" maxlength="4" 
+                    [readonly]="model.status !== 'HOLD'" #receive_quantity="ngModel" pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+              <!--#endregion receive_quantity-->
+
+              <!--#region price_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="price_amount.invalid && price_amount.touched">
+                  <label for="price_amount" class="control-label">Unit Price</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="price_amount"
+                    maxlength="24" [ngModel]="model.price_amount | number : '1.2-2'" name="p_price_amount"
+                    #price_amount="ngModel" [readonly]="model.status !== 'HOLD' || tampUnitFrom">
+                  <!--[readonly]="model.status !== 'HOLD'"-->
+                </div>
+              </div>
+              <!--#endregion price_amount-->
+
+              <!--#region discount_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="discount_amount.invalid && discount_amount.touched">
+                  <label for="discount_amount" class="control-label">Discount Amount (Unit)</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="discount_amount"
+                    maxlength="24" [ngModel]="model.discount_amount | number : '1.2-2'" name="p_discount_amount"
+                    #discount_amount="ngModel" [readonly]="model.status !== 'HOLD' || tampUnitFrom">
+                </div>
+              </div>
+              <!--#endregion discount_amount-->
+
+              <!--#region tax-->
+              <!--(+) Ari 2024-08-10-->
+              <div class="col-md-4">
+                <label class="labelmodule">Tax *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        data-target="#lookupModalTax" data-toggle="modal" href="#"
+                        [disabled]="model.status !== 'HOLD'">
+                        <i class="fa fa-search-plus"></i></button> {{model.tax_name}}
+                      <input type="hidden" name="p_tax_code" [ngModel]="model.tax_code"  #tax_code="ngModel" />
+                      <input type="hidden" name="p_tax_name" [ngModel]="model.tax_name" #tax_name="ngModel" />
+                      <input type="hidden" name="p_ppn_pct" [ngModel]="model.ppn_pct" #ppn_pct="ngModel" />
+                      <input type="hidden" name="p_pph_pct" [ngModel]="model.pph_pct" #pph_pct="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion tax-->
+
+              <!--#region ppn_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="ppn_amount.invalid && ppn_amount.touched">
+                  <label for="ppn_amount" class="control-label">PPN (Receive Quantity) *</label>
+                  <input [readonly]="model.status !== 'HOLD'" type="text" class="form-control col-md-6"
+                    style="text-align: right;" amount="ppn_amount" maxlength="24" 
+                    [ngModel]="model.ppn_amount | number : '1.2-2'" name="p_ppn_amount" #ppn_amount="ngModel">
+                </div>
+              </div>
+              <!--#endregion ppn_amount-->
+
+              <!--#region pph_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="pph_amount.invalid && pph_amount.touched">
+                  <label for="pph_amount" class="control-label">PPH (Receive Quantity) *</label>
+                  <input [readonly]="model.status !== 'HOLD'" type="text" class="form-control col-md-6"
+                    style="text-align: right;" amount="pph_amount" maxlength="24"
+                    [ngModel]="model.pph_amount | number : '1.2-2'" name="p_pph_amount" #pph_amount="ngModel">
+                </div>
+              </div>
+              <!--#endregion pph_amount-->
+
+              <!--#region total_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="total_amount.invalid && total_amount.touched">
+                  <label for="total_amount" class="control-label">Total Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="total_amount"
+                    maxlength="24" [ngModel]="model.total_amount | number : '1.2-2'" name="p_total_amount"
+                    #total_amount="ngModel" [readonly]="model.status !== 'HOLD' || !tampUnitFrom">
+                </div>
+              </div>
+              <!--#endregion total_amount-->
+
+              <!--#region location_code-->
+              <div class="col-md-4" hidden>
+                <label class="labelmodule">Location *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        data-target="#lookupModalLocationCode" data-toggle="modal"
+                        href="#" [disabled]="model.status !== 'HOLD'">
+                        <i class="fa fa-search-plus"></i></button> {{model.location_name}}
+                      <input type="hidden" name="p_location_code" [ngModel]="model.location_code"
+                        #location_code="ngModel" />
+                      <input type="hidden" name="p_location_name" [ngModel]="model.location_name"
+                        #location_name="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion location_code-->
+
+              <!--#region warehouse_code-->
+              <div class="col-md-4" hidden>
+                <label class="labelmodule">Warehouse *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        data-target="#lookupModalWarehouseCode" data-toggle="modal"
+                        href="#" disabled>
+                        <i class="fa fa-search-plus"></i></button> {{model.warehouse_name}}
+                      <input type="hidden" name="p_warehouse_code" [ngModel]="model.warehouse_code"
+                        #warehouse_code="ngModel" />
+                      <input type="hidden" name="p_warehouse_name" [ngModel]="model.warehouse_name"
+                        #warehouse_name="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion warehouse_code-->
+
+              <!--#region Shipper-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="shipper_code.invalid && shipper_code.touched">
+                  <label for="shipper_code" class="control-label">Shipper *</label>
+                  <input type="text" class="form-control" [ngModel]="model.shipper_code" name="p_shipper_code"
+                    maxlength="50" #shipper_code="ngModel" [readonly]="model.status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion Shipper-->
+
+              <!--#region no_resi-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="no_resi.invalid && no_resi.touched">
+                  <label for="no_resi" class="control-label">No Resi</label>
+                  <input type="text" class="form-control col-md-6" [ngModel]="model.no_resi" name="p_no_resi"
+                    maxlength="50" #no_resi="ngModel" [readonly]="model.status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion no_resi-->
+
+              <!--#region spesification-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="spesification.invalid && spesification.touched">
+                  <label for="spesification" class="control-label">Spesification</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.spesification" name="p_spesification"
+                    maxlength="4000" #spesification="ngModel" readonly></textarea>
+                </div>
+              </div>
+              <!--#endregion spesification-->
+            </div>
+            <!--#endregion row -->
+        </div>
+        <!--#region wizard-->
+        <!-- <div class=" wizard-custom-margin" [hidden]="params == null"> -->
+          <!--#region wizard container -->
+          <!-- <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul> -->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="grncheklistwiz()" href="#grnchecklist" data-toggle="tab" role="tab"
+                        aria-controls="grnchecklist" aria-selected="true">
+                        Checklist
+                      </a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="grnobjectinfowiz()" href="#grnobjectinfo" data-toggle="tab"
+                        role="tab" aria-controls="grnobjectinfo" aria-selected="true">
+                        Info
+                      </a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="grndocumentwiz()" href="#grndocument" data-toggle="tab" role="tab"
+                        aria-controls="grndocument" aria-selected="true">
+                        Document
+                      </a>
+                    </li> -->
+                  <!-- </ul>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <!--#endregion wizard container-->
+        <!-- </div> -->
+
+        <!--endregion wizard-->
+
+        <div id="ListBiddingDetail">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+              <hr flex />
+          </span>
+          <div class="card-header">
+            <h5 class="card-title">Object Info Good Receipt Note</h5>
+        </div>
+        <div class="row">
+        <div class="col-md-12">
+
+            <input type="text" [ngModel]="model.status" name="p_status" hidden>
+
+            <div class="card-body">
+                <input type="text" [ngModel]="model.status" name="p_status" hidden>
+                <!--#region list view-->
+                <table id="datatableObjectInfo" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting" style="text-align: center;">No</th>
+                            <th class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                             />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th [hidden]="model.type_asset_code != 'VHCL'">Plat No</th>
+                            <th [hidden]="model.type_asset_code != 'ELCT'">Serial No</th>
+                            <th [hidden]="model.type_asset_code !== 'HE' && model.type_asset_code !== 'MCHN'">Invoice No
+                            </th>
+                            <th [hidden]="model.type_asset_code == 'ELCT'">Chassis No</th>
+                            <th [hidden]="model.type_asset_code == 'ELCT'">Engine No</th>
+                            <th [hidden]="model.type_asset_code != 'ELCT'">Domain</th>
+                            <th [hidden]="model.type_asset_code != 'ELCT'">IMEI</th>
+                            <!-- <th>BPKB No</th>
+                            <th>Cover Note</th>
+                            <th>Cover Note Date</th>
+                            <th>Exp Date</th> -->
+                            <!-- <th>STNK No/ Date/ Exp Date</th> -->
+                            <th>STNK No./ STNK Exp Date/ STNK Tax Date</th>
+                            <!-- <th>STCK No/ Date/ Exp Date</th> -->
+                            <th>STCK No./ STCK Date/ STCK Exp Date</th>
+                            <!-- <th>Keur No/ Date/ Exp Date</th> -->
+                            <th>Keur No./ Keur Date/ Keur Exp Date</th>
+                            <!-- <th>File Name</th>
+                            <th style="text-align: center;">Action</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of listobjectinfolist;  let i=index">
+                            <td style="text-align: center;">{{listobjectinfolist.numberIndex+i+1}}</td>
+                            <td class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            (change)="checkIfAllTableSelected($event, row.id);">
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </td> <input type="hidden" value="{{row.id}}" name="p_id_object_info">
+                            <td style="text-align: left; width: 15%;" [hidden]="model.type_asset_code != 'VHCL'">
+                                {{row.plat_no }}</td>
+                            <td style="text-align: left; width: 30%;" [hidden]="model.type_asset_code != 'ELCT'">
+                                {{row.serial_no }}</td>
+                            <td style="text-align: left; width: 30%;"
+                                [hidden]="model.type_asset_code !== 'HE' && model.type_asset_code !== 'MCHN'">
+                                {{row.invoice_no
+                                }}</td>
+                            <td style="text-align: left; width: 15%;" [hidden]="model.type_asset_code == 'ELCT'">
+                                {{row.chassis_no }}</td>
+                            <td style="text-align: left; width: 15%;" [hidden]="model.type_asset_code == 'ELCT'">
+                                {{row.engine_no }}</td>
+                            <td style="text-align: left; width: 30%;" [hidden]="model.type_asset_code != 'ELCT'">
+                                {{row.domain }}</td>
+                            <td style="text-align: left; width: 30%;" [hidden]="model.type_asset_code != 'ELCT'">
+                                {{row.imei }}</td>
+                            <!-- <td style="width: 10%;">
+                                <input type="text" id="bpkb_no{{i}}" class="form-control" type="text"
+                                    value="{{row.bpkb_no}}" name="p_bpkb_no" [readonly]="model.status != 'HOLD'">
+                            </td>
+                            <td style="width: 10%;">
+                                <input type="text" id="cover_note{{i}}" class="form-control" type="text"
+                                    [readonly]="model.status != 'HOLD'" value="{{row.cover_note}}" name="p_cover_note">
+                            </td> -->
+                            <td style="width: 15%;">
+                                <input type="text" id="stnk{{i}}" class="form-control" type="text" value="{{row.stnk}}"
+                                    name="p_stnk" [readonly]="model.status != 'HOLD'"> <br>                                
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.stnk_exp_date}}" name="p_stnk_exp_date"
+                                        [options]="myDatePickerOptions" (click)="p_stnk_exp_date.toggleCalendar()"
+                                        #p_stnk_exp_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div>
+                                <br>
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.stnk_date}}" name="p_stnk_date" [options]="myDatePickerOptions"
+                                        (click)="p_stnk_date.toggleCalendar()" #p_stnk_date="angular-mydatepicker"
+                                        autocomplete="off" [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div> <br>
+                                <div class="col-md-12">
+                                    <input [hidden]="row.file_name_stnk != '' || pageType !=null || model.status != 'HOLD'"
+                                        type="file" (change)="onUpload_stnk($event, row.id)" />
+                                    <a>{{row.file_name_stnk}}</a>
+                                </div>
+                                <br><br><br>
+                                <div class="col-md-12">
+                                    <span>
+                                        <a [hidden]="row.file_name_stnk == '' || row.file_name_stnk == null"
+                                            (click)="previewFile_stnk(row.file_name_stnk, row.file_path_stnk)"
+                                            style="cursor: pointer;">
+                                            Preview</a> <br> <br>
+                                        <a [hidden]="row.file_name_stnk == '' || row.file_name_stnk == null || isReadOnly"
+                                            (click)="deleteImage_stnk(row.id, row.file_name_stnk, row.file_path_stnk)"
+                                            style="cursor: pointer;">
+                                            Remove</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="width: 15%;">
+                                <input type="text" id="stck{{i}}" class="form-control" type="text" value="{{row.stck}}"
+                                    name="p_stck" [readonly]="model.status != 'HOLD'"> <br>
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.stck_date}}" name="p_stck_date" [options]="myDatePickerOptions"
+                                        (click)="p_stck_date.toggleCalendar()" #p_stck_date="angular-mydatepicker"
+                                        autocomplete="off" [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div> <br>
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.stck_exp_date}}" name="p_stck_exp_date"
+                                        [options]="myDatePickerOptions" (click)="p_stck_exp_date.toggleCalendar()"
+                                        #p_stck_exp_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div>
+                                <br>
+                                <div class="col-md-12">
+                                    <input [hidden]="row.file_name_stck != '' || pageType !=null || model.status != 'HOLD'"
+                                        type="file" (change)="onUpload_stck($event, row.id)" />
+                                    <a>{{row.file_name_stck}}</a>
+                                </div>
+                                <br><br><br>
+                                <div class="col-md-12">
+                                    <span>
+                                        <a [hidden]="row.file_name_stck == '' || row.file_name_stck == null"
+                                            (click)="previewFile_stck(row.file_name_stck, row.file_path_stck)"
+                                            style="cursor: pointer;">
+                                            Preview</a> <br> <br>
+                                        <a [hidden]="row.file_name_stck == '' || row.file_name_stck == null || isReadOnly"
+                                            (click)="deleteImage_stck(row.id, row.file_name_stck, row.file_path_stck)"
+                                            style="cursor: pointer;">
+                                            Remove</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="width: 15%;">
+                                <input type="text" id="keur{{i}}" class="form-control" type="text" value="{{row.keur}}"
+                                    name="p_keur" [readonly]="model.status != 'HOLD'"> <br>
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.keur_date}}" name="p_keur_date" [options]="myDatePickerOptions"
+                                        (click)="p_keur_date.toggleCalendar()" #p_keur_date="angular-mydatepicker"
+                                        autocomplete="off" [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div> <br>
+                                <div class="col-md-12">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        value="{{row.keur_exp_date}}" name="p_keur_exp_date"
+                                        [options]="myDatePickerOptions" (click)="p_keur_exp_date.toggleCalendar()"
+                                        #p_keur_exp_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="model.status != 'HOLD'"
+                                        [ngStyle]="getStyles(model.status != 'HOLD')" />
+                                </div>
+                                <br>
+                                <div class="col-md-12">
+                                    <input [hidden]="row.file_name_keur != '' || pageType !=null || model.status != 'HOLD'"
+                                        type="file" (change)="onUpload_keur($event, row.id)" />
+                                    <a>{{row.file_name_keur}}</a>
+                                </div>
+                                <br><br><br>
+                                <div class="col-md-12">
+                                    <span>
+                                        <a [hidden]="row.file_name_keur == '' || row.file_name_keur == null"
+                                            (click)="previewFile_keur(row.file_name_keur, row.file_path_keur)"
+                                            style="cursor: pointer;">
+                                            Preview</a> <br> <br>
+                                        <a [hidden]="row.file_name_keur == '' || row.file_name_keur == null || isReadOnly"
+                                            (click)="deleteImage_keur(row.id, row.file_name_keur, row.file_path_keur)"
+                                            style="cursor: pointer;">
+                                            Remove</a>
+                                    </span>
+                                </div>
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

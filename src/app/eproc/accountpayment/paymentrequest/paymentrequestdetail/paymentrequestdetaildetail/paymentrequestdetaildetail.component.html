@@ -1,0 +1,155 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h5 class="card-title">Payment Request Detail List</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #payRegDetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(payRegDetailForm.value, payRegDetailForm.valid)">
+            <!--#region button submit, button back-->
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit, button back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <input hidden type="text" [ngModel]="this.param" name="p_payment_request_code">
+              <input hidden type="text" [ngModel]="this.params" name="p_id">
+              <!--#endregion code-->
+
+              <!--#region invoice_register_code-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                    <label for="invoice_register_code" class="control-label">Invoice Register Code *</label>
+                    <input type="text" class="form-control" [ngModel]="model.invoice_register_code" name="p_invoice_register_code"
+                    [readonly]="this.tampdHidden || this.params !== null" required #invoice_register_code="ngModel" maxlength="50">
+                    <small
+                        *ngIf="(invoice_register_code.errors?.required && invoice_register_code.touched) || (invoice_register_code.errors?.required && payRegDetailForm.submitted)"
+                        class="text-danger">
+                        Invoice Register Code is required
+                    </small>
+                </div>
+            </div> -->
+            <!--#endregion invoice_register_code-->
+
+              <!--#region payment_amount-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="payment_amount.invalid && payment_amount.touched">
+                  <label for="payment_amount" class="control-label">Payment Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="payment_amount"
+                    maxlength="24" [ngModel]="model.payment_amount | number : '1.2-2'" name="p_payment_amount"
+                    #payment_amount="ngModel" [readonly]="this.tampdHidden || this.params !== null">
+                  <small
+                    *ngIf="payment_amount.errors?.required && payment_amount.touched || (payment_amount.errors?.required && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    Payment Amount is required
+                  </small>
+                  <small
+                    *ngIf="payment_amount.errors?.pattern && payment_amount.touched || (payment_amount.errors?.pattern && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    Payment Amount is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion payment_amount-->
+
+               <!--#region ppn-->
+               <div class="col-md-4">
+                <div class="form-group" [class.has-error]="ppn.invalid && ppn.touched">
+                  <label for="ppn" class="control-label">PPN Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="ppn"
+                    maxlength="24" [ngModel]="model.ppn | number : '1.2-2'" name="p_ppn"
+                    #ppn="ngModel" [readonly]="this.tampdHidden || this.params !== null">
+                  <small
+                    *ngIf="ppn.errors?.required && ppn.touched || (ppn.errors?.required && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    PPN Amount is required
+                  </small>
+                  <small
+                    *ngIf="ppn.errors?.pattern && ppn.touched || (ppn.errors?.pattern && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    PPN Amount is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion ppn-->
+              
+               <!--#region pph-->
+               <div class="col-md-4">
+                <div class="form-group" [class.has-error]="pph.invalid && pph.touched">
+                  <label for="pph" class="control-label">PPH Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="pph"
+                    maxlength="24" [ngModel]="model.pph | number : '1.2-2'" name="p_pph"
+                    #pph="ngModel" [readonly]="this.tampdHidden || this.params !== null">
+                  <small
+                    *ngIf="pph.errors?.required && pph.touched || (pph.errors?.required && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    PPH Amount is required
+                  </small>
+                  <small
+                    *ngIf="pph.errors?.pattern && pph.touched || (pph.errors?.pattern && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    PPH Amount is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion pph-->
+              
+               <!--#region fee-->
+               <div class="col-md-4" hidden>
+                <div class="form-group" [class.has-error]="fee.invalid && fee.touched">
+                  <label for="fee" class="control-label">Fee</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;" amount="fee"
+                    maxlength="24" [ngModel]="model.fee | number : '1.2-2'" name="p_fee"
+                    #fee="ngModel" [readonly]="this.tampdHidden || this.params !== null">
+                  <small
+                    *ngIf="fee.errors?.required && fee.touched || (fee.errors?.required && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    Fee is required
+                  </small>
+                  <small
+                    *ngIf="fee.errors?.pattern && fee.touched || (fee.errors?.pattern && payRegDetailForm.submitted)"
+                    class="text-danger">
+                    Fee is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion fee-->
+
+               <!--#region is_paid-->
+              <!-- <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_paid" name="p_is_paid" [readonly]="this.tampdHidden || this.params !== null">
+                      Paid
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div> -->
+              <!--#endregion is_paid-->
+            </div>
+            <!--#endregion row -->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

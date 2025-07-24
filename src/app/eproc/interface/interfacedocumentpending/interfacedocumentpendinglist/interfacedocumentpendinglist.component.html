@@ -1,0 +1,130 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="card">
+                <!--#region watermark-->
+                <div class="watermark" [hidden]="this.isWatermark === '0'">
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+                <div class="card-header">
+                    <h5>Document Pending List (Interface)</h5>
+                </div>
+                <div class="card-body">
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region Lookup Branch-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label labelmodule" (click)="btnClearBranch()"
+                                    style="cursor: pointer;">Branch</label>
+                                <div class="col-md-12 buttons">
+                                    <span>
+                                        <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                            (click)="btnLookupbranch()" data-toggle="modal"
+                                            data-target="#lookupModalbranch" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{branchName}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion Lookup Branch-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!-- #region List view -->
+                    <table id="datatableDocumentPendingList" datatable [dtOptions]="dtOptions"
+                        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="disabled-sorting">No</th>
+                                <th style="display: none;"></th>
+                                <th>FA Code/Name</th>
+                                <th>Plat/Chasis/Engine No</th>
+                                <th>Branch</th>
+                                <th>Entry Date</th>
+                                <th>Doc Type</th>
+                                <th>Vendor</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of listdocumentpending;let i=index ">
+                                <td style="text-align: center;">{{listdocumentpending.numberIndex+i+1}}</td>
+                                <td style="display: none;"></td>
+                                <td style="width: 20%;text-align: left;">{{row.asset_no}} <br> {{row.asset_name}}</td>
+                                <td style="width: 20%;">{{row.plat_no}} <br> {{row.chasis_no}} <br> {{row.engine_no}}
+                                </td>
+                                <td style="width: 15%;text-align: left;">{{row.branch_name}}</td>
+                                <td style="width: 15%;text-align: center;">{{row.entry_date}}</td>
+                                <td style="width: 15%;">{{row.document_type}}</td>
+                                <td style="width: 15%;">{{row.vendor_name}}</td>
+                                <td style="text-align: center;">
+                                    <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                        (click)="btnEdit(row.code)"><i class="fa fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--#endregion LegalMain List view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup branch-->
+<div class="modal" id="lookupModalbranch" style="margin-top: -75px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <form>
+                    <div class="col-md-12">
+                        <div class="card-body col-md-12" style="width: 100%">
+                            <table id="datatableLookupBranch" class="table table-striped table-bordered hover"
+                                cellspacing="0" style="min-width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="display: none;"></th>
+                                        <th class="disabled-sorting">No</th>
+                                        <th>Code</th>
+                                        <th>Branch </th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of lookupBranch; let i=index">
+                                        <td style="display: none;"></td>
+                                        <td style="text-align: center;">{{lookupBranch.numberIndex+i+1}}</td>
+                                        <td style="width: 20%;" class="text-center">{{ row.code }}</td>
+                                        <td style="width: 75%;">{{ row.name }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-outline-default btn-round"
+                                                (click)="btnSelectRowLookupBranch(row.code, row.name)">Select</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup branch-->

@@ -1,0 +1,82 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <div class="toolbar">
+                    <!--#region button add-->
+                    <button class="btn btn-info btn-round" (click)="btnAdd()" data-role="R00021550022159C"
+                        [hidden]="tampHiddenStatus">
+                        Add
+                    </button>
+                    <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00021550022160D"
+                        [hidden]="tampHiddenStatus">
+                        Delete
+                    </button>
+                    <button hidden id="vendorwiz" type="button" (click)="callGetrowHeader()"></button>
+                    <!--#endregion button delete-->
+
+                </div>
+                <!--#region list view-->
+                <table id="datatablesquotationreviewvendor" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th [hidden]="tampHiddenStatus" class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                            [(ngModel)]="selectedAll" (change)="selectAll()" name="selectAll" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th>Supplier</th>
+                            <th>Tax</th>
+                            <th>Warranty / Warranty Part</th>
+                            <th>Unit Price</th>
+                            <th>Discount</th>
+                            <th>Nett Price</th>
+                            <th style="text-align: center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of quotationReviewDetailList;let i = index">
+                            <td style="text-align: center">{{ quotationReviewDetailList.numberIndex + i + 1 }}</td>
+                            <td [hidden]="tampHiddenStatus" class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            name="selected" (change)="checkIfAllTableSelected($event, row.id)" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td style="text-align: left; width: 25%">{{ row.supplier_name }}</td>
+                            <td style="text-align: left; width: 15%">{{ row.tax_name }}</td>
+                            <td style="text-align: left; width: 15%"> {{ row.warranty_month }} <br> {{
+                                row.warranty_part_month }}</td>
+                            <td style="text-align: right; width: 15%">{{ row.price_amount | number : '1.2-2'}}</td>
+                            <td style="text-align: right; width: 15%">{{ row.discount_amount | number : '1.2-2'}}</td>
+                            <td style="text-align: right; width: 15%">{{ row.nett_price | number : '1.2-2'}}</td>
+                            <!-- <td style="text-align: left; width: 10%">{{ row.spesification }}</td>
+                            <td style="text-align: left; width: 10%">{{ row.remark }} -->
+                            <!-- </td> -->
+                            <td style="text-align: center">
+                                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                    (click)="btnEdit(row.id)"><i class="fa fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>

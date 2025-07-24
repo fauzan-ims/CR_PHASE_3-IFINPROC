@@ -1,0 +1,198 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h4 class="card-title">Approval Request Info (Interface)</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region button proceed & back-->
+          <button [hidden]="model.job_status !== 'FAILED'" type="button" class="btn btn-success btn-round"
+            data-role="R00009650000966O" (click)="btnProceed(model.code)">Proceed</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button proceed & back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region id-->
+            <input type="text" class="form-control" [ngModel]="model.id" name="p_id" hidden>
+            <!--#endregion id-->
+
+            <!--#region code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Request No </label>
+                <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+              </div>
+            </div>
+            <!--#endregion code-->
+
+            <!--#region Branch Code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Branch </label>
+                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+              </div>
+            </div>
+            <!--#endregion Branch Code-->
+
+            <!--#region request_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status</label>
+                <input type="text" class="form-control" [ngModel]="model.request_status" name="p_request_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion request_status-->
+
+            <!--#region request_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="date" class="control-label">Date </label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.request_date" name="p_request_date" [options]="myDatePickerOptions"
+                  #p_request_date="ngModel" #date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion date -->
+
+            <!--#region request_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Request Amount </label>
+                <input type="text" class="form-control" [ngModel]="model.request_amount | number : '1.2-2'"
+                  amount="request_amount" name="p_request_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion request_amount-->
+
+            <!--#region request_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Remark</label>
+                <textarea type="text" class="form-control" [ngModel]="model.request_remarks" name="p_request_remarks"
+                  readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion request_remarks-->
+
+          </div>
+          <!--#endregion  row-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <br>
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region reff_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Reff No </label>
+                <input type="text" class="form-control" [ngModel]="model.reff_no" name="p_reff_no" readonly>
+              </div>
+            </div>
+            <!--#endregion reff_no-->
+
+            <!--#region reff_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Reff Name </label>
+                <input type="text" class="form-control" [ngModel]="model.reff_name" name="p_reff_name" readonly>
+              </div>
+            </div>
+            <!--#endregion reff_name-->
+
+            <!--#region approval_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Approval Status</label>
+                <input type="text" class="form-control" [ngModel]="model.approval_status" name="p_approval_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion approval_status-->
+          </div>
+          <!--#endregion  row-->
+
+          <!--#region row-->
+          <div class="row" [hidden]="model.job_status !== 'FAILED'">
+            <!--#region job_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Job Status </label>
+                <input type="text" class="form-control" [ngModel]="model.job_status" name="p_job_status" readonly>
+              </div>
+            </div>
+            <!--#endregion job_status-->
+
+            <!--#region failed_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Failed Remark</label>
+                <textarea type="text" class="form-control" [ngModel]="model.failed_remarks" name="p_failed_remarks"
+                  readonly rows="3"> </textarea>
+              </div>
+            </div>
+            <!--#endregion failed_remarks-->
+          </div>
+          <!--#endregion  row-->
+        </div>
+
+        <!--#region list view-->
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card-header">
+              <h4 class="card-title">Approval Request Dimension List (Interface)</h4>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+              </div>
+
+              <!--#region list view-->
+              <table id="datatableApprovalDetail" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Dimension Code</th>
+                    <th>Dimension Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listApprovalDetail;let i=index">
+                    <td class="if-no-edit-btn" style="display: none;"></td>
+                    <td style="text-align: center;">{{listApprovalDetail.numberIndex+i+1}}</td>
+                    <td style="width: 15%;text-align: center;">{{row.dimension_code}}</td>
+                    <td style="width: 85%;">{{row.dimension_value}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

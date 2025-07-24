@@ -1,0 +1,58 @@
+<div class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <!-- <div class="toolbar">
+      
+                
+                    <button hidden id="verifdetailwiz" type="button" (click)="callGetrowHeader()"></button>
+                   
+                </div> -->
+
+                <!--#region list view-->
+                <table id="datatablerequestdoc" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th style="display: none;"></th>
+                            <th>Remark</th>
+                            <th>File Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of photolist;  let i=index">
+                            <td style="text-align: center;">{{photolist.numberIndex+i+1}}</td>
+                            <td style="text-align: center; width: 10%;" class="disabled-sorting" hidden>
+                            </td>
+                            <td style="width: 50%;">
+                                <textarea id="remark{{i}}" class="form-control" type="text" disabled
+                                    value="{{row.remark}}" name="p_remark_detail">
+                        </textarea>
+                            </td>
+                            <td style="width: 50%;">
+                                <!-- <input [hidden]="row.file_name != '' && row.file_name != null" type="file"
+                                    (change)="onUpload($event, row.id)" /> -->
+                                {{row.file_name}}
+                                <input hidden name="p_file_path" [ngModel]="row.file_path">
+                            </td>
+                            <td style="text-align: center;" class="if-no-edit-btn">
+                                <span>
+                                    <a [hidden]="row.file_name == '' || row.file_name == null"
+                                        (click)="previewFile(row.file_name, row.file_path)" style="cursor: pointer;">
+                                        Preview</a>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,723 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <!--#region watermark-->
+                <div class="watermark" [hidden]="this.isWatermark === '0'">
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+                <div class="card-header">
+                    <h5 class="card-title">Final GRN Request Info</h5>
+                </div>
+                <div class="card-body">
+                    <!--#region form-->
+                    <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                    <button id="btnBelanjaBahanDetail" hidden type="button" class="btn btn-danger btn-round"
+                        (click)="this.callGetrow()"></button>
+                    <!--#endregion button submit dan back-->
+
+                    <!--#region div-->
+                    <div class="row">
+                        <!--#region application_no-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="status" class="control-label">Application No/Proc Request Code</label>
+                                <input maxlength="50" type="text" class="form-control" [ngModel]="model.application_no"
+                                    name="p_application_no" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion application_no-->
+
+                        <!--#region branch_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="branch_name" class="control-label">Branch</label>
+                                <input type="text" class="form-control" [ngModel]="model.branch_name"
+                                    name="p_branch_name" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion branch_name-->
+
+                        <!--#region status-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="status" class="control-label">Status</label>
+                                <input maxlength="20" type="text" class="form-control" [ngModel]="model.status"
+                                    name="p_status" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion status-->
+
+                        <!--#region client_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="client_name" class="control-label">Client</label>
+                                <input type="text" class="form-control" [ngModel]="model.client_name"
+                                    name="p_client_name" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion client_name-->
+
+                        <!--#region application_date-->
+                        <!-- <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="application_date" class="control-label">Application date</label>
+                                <div>
+                                    <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.application_date" name="p_application_date"
+                                        [options]="myDatePickerOptions" #p_application_date="ngModel"
+                                        #receive_date="angular-mydatepicker" autocomplete="off"
+                                        [ngStyle]="getStyles(true)" readonly />
+                                </div>
+                            </div>
+                        </div> -->
+                        <!--#endregion application_date-->
+
+                        <!--#region area p_application_date-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Application / Proc Request date</label>
+                                <div class="row">
+                                    <!--#region p_application_date-->
+                                    <div class="col-md-4">
+                                        <input class="form-control col-md-12" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.application_date"
+                                            name="p_application_date" [options]="myDatePickerOptions"
+                                            #p_application_date="ngModel" #receive_date="angular-mydatepicker"
+                                            autocomplete="off" [ngStyle]="getStyles(true)" readonly />
+                                    </div>
+                                    <!--#endregion p_application_date-->
+                                    /
+                                    <!--#region procurement_request_date-->
+                                    <div class="col-md-4">
+                                        <input class="form-control col-md-12" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.procurement_request_date"
+                                            name="p_procurement_request_date" [options]="myDatePickerOptions"
+                                            #p_procurement_request_date="ngModel" #receive_date="angular-mydatepicker"
+                                            autocomplete="off" [ngStyle]="getStyles(true)" readonly />
+                                    </div>
+                                    <!--#endregion procurement_request_date-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion p_application_date-->
+
+                        <!--#region requestor_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="requestor_name" class="control-label">Requestor</label>
+                                <input type="text" class="form-control" [ngModel]="model.requestor_name"
+                                    name="p_requestor_name" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion requestor_name-->
+
+                        <!--#region total_purchase_data-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="total_purchase_data" class="control-label">Total Item</label>
+                                <input type="hidden" name="p_total_purchase_data" [ngModel]="model.total_purchase_data"
+                                    maxlength="50" #total_purchase_data="ngModel" class="form-control col-md-6" />
+                                <input type="text" class="form-control" [ngModel]="model.total_purchase_data"
+                                    maxlength="250" name="p_total_purchase_data" #total_purchase_data="ngModel"
+                                    class="form-control col-md-6" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion total_purchase_data-->
+                    </div>
+                    <span layout="row horizontal-divider">
+                        <hr flex />
+                    </span>
+                    <!--#region list view-->
+                    <div *ngIf="param != null" class="row">
+                        <div class="col-md-12">
+                            <div class="card-header">
+                                <h5 class="card-title">Final GRN Request Detail List</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="toolbar">
+                                    <button hidden id="GoodReciptNote" type="button" (click)="btnReload()"></button>
+                                </div>
+                                <!--#region list view-->
+                                <table id="datatablefinalgrndetaillist" datatable [dtOptions]="dtOptions"
+                                    class="table table-striped table-bordered row-border hover" cellspacing="0"
+                                    width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="disabled-sorting">No</th>
+                                            <th style="display:none ;"></th>
+                                            <th>Asset No/ Year/ Colour</th>
+                                            <th>Delivery To</th>
+                                            <th>BBN Info</th>
+                                            <th>PO Code/GRN Code/GRN Date/Supplier</th>
+                                            <th>Asset</th>
+                                            <th></th>
+                                            <th>Karoseri</th>
+                                            <th></th>
+                                            <th>Accesories</th>
+                                            <th></th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of finalGRNlist;let i=index ">
+                                            <td class="if-no-edit-btn" style="text-align: center;">
+                                                {{finalGRNlist.numberIndex+i+1}}</td>
+                                            <td style="display: none;"><input name="p_id" value="{{row.id}}"></td>
+                                            <td style="text-align: left; width: 10%;">{{row.asset_no }} <br> {{row.year
+                                                }} <br> {{row.colour }}</td>
+                                            <td style="text-align: left; width: 10%;">{{row.delivery_to}}</td>
+                                            <td style="text-align: left; width: 10%;">{{row.bbn_name}} <br>
+                                                {{row.bbn_location}} <br> {{row.bbn_address}}</td>
+                                            <td style="text-align: left; width: 10%;">{{row.po_code_asset}} <br>
+                                                {{row.grn_code_asset}} <br> {{row.grn_receive_date}} <br>
+                                                {{row.supplier_name_asset}}</td>
+                                            <td style="text-align: left; width: 10%;">{{row.item_name}} <br>
+                                                {{row.plat_no}} <br> {{row.engine_no}} <br> {{row.chassis_no}}</td>
+                                                <!--  -->
+                                            <td style="text-align: left; width: 10%;">
+                                                <div class="form-group" [hidden]="row.status === 'POST' || row.asset_no !== '' || row.po_code_asset!== ''">
+                                                    <div class="col-md-12 buttons">
+                                                        <span>
+                                                            <button
+                                                                class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                                type="button" (click)="btnLookupFixedAsset(row.id, finalGRNlist.numberIndex+i)"
+                                                                data-target="#lookupModalFixedAsset" data-toggle="modal"
+                                                                href="#" [disabled]="this.tampHiddenStatus">
+                                                                <i class="fa fa-search-plus"></i>
+                                                            </button>
+                                                             <!-- {{model.fa_code}} - {{model.fa_name}} - {{model.engine_no}} - {{model.chassis_no}} - {{model.plat_no}} -->
+                                                            <button [hidden]="(row.plat_no== '')"
+                                                                class="btn btn-danger btn-print-round" type="button"
+                                                                (click)="btnClearAsset(row.id, row.code, row.item_name, row.engine_no, row.chassis_no, row.plat_no)">
+                                                                Clear
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                                <!--  -->
+                                            <td style="text-align: left; width: 10%;">{{row.karoseri}}</td>
+                                            <td style="text-align: left; width: 10%;">
+                                                <div class="form-group" [hidden]="row.status === 'POST'">
+                                                    <div class="col-md-12 buttons">
+                                                        <span>
+                                                            <button
+                                                                class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                                type="button" (click)="btnLookupKaroseri(row.id)"
+                                                                data-target="#lookupModalKaroseri" data-toggle="modal"
+                                                                href="#" [disabled]="this.tampHiddenStatus">
+                                                                <i class="fa fa-search-plus"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="text-align: left; width: 10%;">{{row.accesories}}</td>
+                                            <td style="text-align: left; width: 10%;">
+                                                <div class="form-group" [hidden]="row.status === 'POST'">
+                                                    <div class="col-md-12 buttons">
+                                                        <span>
+                                                            <button
+                                                                class="btn btn-icon btn-outline-default btn-round btn-md"
+                                                                type="button" (click)="btnLookupAccesories(row.id)"
+                                                                data-target="#lookupModalAccesories" data-toggle="modal"
+                                                                href="#" [disabled]="this.tampHiddenStatus">
+                                                                <i class="fa fa-search-plus"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%;text-align: center;">
+                                                <button [hidden]="(row.status !== 'HOLD')"
+                                                    class="btn btn-success btn-print-round" type="button"
+                                                    (click)="btnPost(row.id)">
+                                                    Post
+                                                </button>
+                                                <span [hidden]="(row.status === 'HOLD')">{{row.status}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--#endregion list view-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion list view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region karoseri-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalKaroseri"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <h5 class="card-title">Asset Info :</h5>
+                    <b> Item Name : {{item_name_asset}} </b> <br>
+                    <b> Plat No : {{plat_no}} </b> <br>
+                    <b> Engine No : {{engine_no}} </b> <br>
+                    <b> Chasis No : {{chasis_no}} </b>
+
+
+                    <div class="card-body col-md-12">
+                        <!--#region button-->
+                        <button (click)="btnKaroseriLookup(application_no)" type="button"
+                            data-target="#lookupModalKaroseriLookup" class="btn btn-info btn-round custom-button-width"
+                            data-toggle="modal" href="#" data-role="R00024460000002C">Add</button>
+                        <button type="button" class="btn btn-danger btn-round custom-button-width" (click)="btnDelete()"
+                            data-role="R00024460000003D">Delete</button>
+                        <!--#endregion button-->
+
+                        <table id="datatableLookupKaroseri" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkall"
+                                                    [(ngModel)]="selectedAll" (change)="selectAllTable();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>PO Code</th>
+                                    <th>GRN Code</th>
+                                    <th>Supplier Name</th>
+                                    <th>Item Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupkaroseri;let i=index ">
+                                    <td style="text-align: center;">{{lookupkaroseri.numberIndex+i+1}}</td>
+                                    <td class="disabled-sorting if-no-edit-btn">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selected"
+                                                    (change)="checkIfAllTableSelected($event, row.id);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 15%;text-align: center;">{{ row.po_no }}</td>
+                                    <td style="width: 15%;">{{ row.grn_code }}</td>
+                                    <td style="width: 30%;">{{ row.supplier_name }}</td>
+                                    <td style="width: 30%;">{{ row.item_name }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion karoseri -->
+
+<!--#region lookup karoseri lookup-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalKaroseriLookup"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <!--#region button-->
+                        <button (click)="btnAddKaroseri()" class="btn btn-info btn-round custom-button-width"
+                            data-role="R00024460000006C">Add</button>
+                        <!--#endregion button-->
+
+                        <table id="datatableLookupKaroseriLookup" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="checkallkaroserilookup" [(ngModel)]="selectedAllkaroseri"
+                                                    (change)="selectAllTableAddKaroseri();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>PO Code</th>
+                                    <th>GRN Code</th>
+                                    <th>Item Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupkaroserilookup;let i=index ">
+                                    <td style="text-align: center;">{{lookupkaroserilookup.numberIndex+i+1}}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedkaroseri"
+                                                    (change)="checkIfAllTableSelectedAddKaroseri($event, row.id);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 15%;text-align: center;">{{ row.po_no }}</td>
+                                    <td style="width: 15%;">{{ row.grn_code }}</td>
+                                    <td style="width: 70%;">{{ row.item_name }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup karoseri lookup-->
+
+<!--#region accesories-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAccesories"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <h5 class="card-title">Asset Info :</h5>
+                    <b> Item Name : {{item_name_asset}} </b> <br>
+                    <b> Plat No : {{plat_no}} </b> <br>
+                    <b> Engine No : {{engine_no}} </b> <br>
+                    <b> Chasis No : {{chasis_no}} </b>
+
+
+                    <div class="card-body col-md-12">
+                        <!--#region button-->
+                        <button (click)="btnAccesoriesLookup(application_no)" type="button"
+                            data-target="#lookupModalAccesoriesLookup"
+                            class="btn btn-info btn-round custom-button-width" data-toggle="modal" href="#"
+                            data-role="R00024460000004C">Add</button>
+                        <button type="button" class="btn btn-danger btn-round custom-button-width"
+                            (click)="btnDeleteAccesories()" data-role="R00024460000005D">Delete</button>
+                        <!--#endregion button-->
+
+                        <table id="datatableLookupAccesories" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkallaccesories"
+                                                    [(ngModel)]="selectedAll" (change)="selectAllTableAccesories();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>PO Code</th>
+                                    <th>GRN Code</th>
+                                    <th>Supplier Name</th>
+                                    <th>Item Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupaccesories;let i=index ">
+                                    <td style="text-align: center;">{{lookupaccesories.numberIndex+i+1}}</td>
+                                    <td class="disabled-sorting if-no-edit-btn">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selected"
+                                                    (change)="checkIfAllTableSelectedAccesories($event, row.id, row.id_accesories_lookup);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 15%;text-align: center;">{{ row.po_no }}</td>
+                                    <td style="width: 15%;">{{ row.grn_code }}</td>
+                                    <td style="width: 30%;">{{ row.supplier_name }}</td>
+                                    <td style="width: 30%;">{{ row.item_name }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion accesories -->
+
+<!--#region lookup accesories lookup-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAccesoriesLookup"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <!--#region button-->
+                        <button (click)="btnAddAccesories()" class="btn btn-info btn-round custom-button-width"
+                            data-role="R00024460000007C">Add</button>
+                        <!--#endregion button-->
+
+                        <table id="datatableLookupAccesoriesLookup" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="checkallaccesorieslookup" [(ngModel)]="selectedAllaccesories"
+                                                    (change)="selectAllTableAddAccesories();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>PO Code</th>
+                                    <th>GRN Code</th>
+                                    <th>Item Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupaccesorieslookup;let i=index ">
+                                    <td style="text-align: center;">{{lookupaccesorieslookup.numberIndex+i+1}}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedaccesories"
+                                                    (change)="checkIfAllTableSelectedAddAccesories($event, row.id);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 15%;text-align: center;">{{ row.po_no }}</td>
+                                    <td style="width: 15%;">{{ row.grn_code }}</td>
+                                    <td style="width: 70%;">{{ row.item_name }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup accesories lookup-->
+
+<!--#region Asset-->
+<!-- <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixedAsset"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12"> -->
+                    <!-- <h5 class="card-title">Asset Info :</h5>
+                    <b> Item Name : {{item_name_asset}} </b> <br>
+                    <b> Plat No : {{plat_no}} </b> <br>
+                    <b> Engine No : {{engine_no}} </b> <br>
+                    <b> Chasis No : {{chasis_no}} </b> -->
+
+
+                    <!-- <div class="card-body col-md-12"> -->
+                        <!--#region button-->
+                        <!-- <button (click)="btnFixedAssetLookup(application_no)" type="button"
+                            data-target="#lookupModalFixedAssetLookup" class="btn btn-info btn-round custom-button-width"
+                            data-toggle="modal" href="#" data-role="R00024460000002C">Add</button>
+                        <button type="button" class="btn btn-danger btn-round custom-button-width" (click)="btnDelete()"
+                            data-role="R00024460000003D">Delete</button> -->
+                        <!--#endregion button-->
+<!-- 
+                        <table id="datatableLookupFixedAsset" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkall"
+                                                    [(ngModel)]="selectedAll" (change)="selectAllTable();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                  <th>FA Code</th>
+                  <th>FA Name</th>
+                  <th>Plat No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupasset;let i=index ">
+                                    <td style="text-align: center;">{{lookupasset.numberIndex+i+1}}</td>
+                                    <td class="disabled-sorting if-no-edit-btn">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selected"
+                                                    (change)="checkIfAllTableSelected($event, row.id);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                  <td style="width: 20%;text-align: center;">{{ row.item_name }}</td>
+                  <td style="width: 65%;">{{ row.plat_no }}</td>
+                  <td style="width: 15%;">{{ row.engine_no }}</td> -->
+<!-- 
+                  {{row.item_name}} <br>{{row.plat_no}} <br> {{row.engine_no}} <br> {{row.chassis_no}}</td> -->
+                                <!-- </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!--#endregion asset -->
+
+<!--#region lookup asset lookup-->
+<!-- <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixedAssetLookup"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12"> -->
+                        <!--#region button-->
+                        <!-- <button (click)="btnAddFixedAsset()" class="btn btn-info btn-round custom-button-width"
+                            data-role="R00024460000006C">Add</button> -->
+                        <!--#endregion button-->
+
+                        <!-- <table id="datatableLookupFixedAssetLookup" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="checkallassetlookup" [(ngModel)]="selectedAllasset"
+                                                    (change)="selectAllTableAddFixedAsset();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                  <th>FA Code</th>
+                  <th>FA Name</th>
+                  <th>Plat No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupassetlookup;let i=index ">
+                                    <td style="text-align: center;">{{lookupassetlookup.numberIndex+i+1}}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedasset"
+                                                    (change)="checkIfAllTableSelectedAddFixedAsset($event, row.id);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 65%;">{{ row.item_name }}</td>
+                  <td style="width: 15%;">{{ row.plat_no }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!--#endregion lookup asset lookup-->
+
+<!-- #region lookup FA code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixedAsset"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFACode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>FA Code</th>
+                  <th>FA Name</th>
+                  <th>Plat No</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfacode;let i=index ">
+                  <td style="text-align: center;">{{lookupfacode.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 65%;">{{ row.item_name }}</td>
+                  <td style="width: 15%;">{{ row.plat_no }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFACode(row.code, row.item_name, row.engine_no, row.chassis_no, row.plat_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup FA Code -->

@@ -1,0 +1,53 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanel" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header">
+          <h5 class="card-title">Parameter Transaction List</h5>
+        </div>
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatable" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th class="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listparametertransaction;let i=index ">
+                <td style="display: none;"></td>
+                <td style="text-align: center;">{{listparametertransaction.numberIndex+i+1}}</td>
+                <td style="text-align: center; width: 15%;">{{row.code}}</td>
+                <td style="text-align: left; width: 85%;">{{row.description}}</td>
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.code)"><i
+                      class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

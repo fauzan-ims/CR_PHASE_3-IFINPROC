@@ -1,0 +1,500 @@
+<div class="main-content" scrollY='true'>
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h5 class="card-title">Group Role Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #grouproleForm="ngForm" (ngSubmit)="onFormSubmit(grouproleForm.value, grouproleForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00021500012150C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region company_code-->
+              <input type="hidden" class="form-control" [ngModel]="model.company_code" name="p_company_code">
+              <!--#region company_code-->
+
+              <!--#region code-->
+              <div class="col-md-4" hidden>
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Code </label>
+                  <input type="text" class="form-control" placeholder="Enter Code" [ngModel]="model.code" name="p_code"
+                    [readonly]="isReadOnly">
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="name" class="control-label">Description *</label>
+                  <input type="text" class="form-control" [ngModel]="model.name" name="p_name" required #name="ngModel">
+                  <small
+                    *ngIf="(name.errors?.required && name.touched) || (name.errors?.required && grouproleForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion name-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="card"> -->
+              <div class="card-header">
+                <h4 class="card-title">Role List</h4>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <!--#region button add delete-->
+                  <button class="btn btn-info btn-round" type="button" (click)="btnLookupGroupRole()"
+                    data-target="#lookupModalGroupRole" data-toggle="modal" href="#" data-role="R00021500022150C">
+                    Add </button>
+                  <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00021500012150D">
+                    Delete
+                  </button>
+                  <!--#endregion button add delete-->
+                </div>
+
+                <!--#region filter-->
+
+                <!--#region row-->
+                <div class="row">
+                  <!--#region Master Module-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule" (click)="btnClearModule()" style="cursor: pointer;"
+                        title="Clear">Module</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupModule()" data-toggle="modal" data-target="#lookupModalModule" href="#"><i
+                              class="fa fa-search-plus"></i></button>
+                          {{model.module_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.module_code" name="p_module_code">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Master Module-->
+
+                  <!--#region Menu code-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule" (click)="btnClearMenu()" style="cursor: pointer;"
+                        title="Clear">Menu</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupMenu()" data-toggle="modal" data-target="#lookupModalMenu" href="#"><i
+                              class="fa fa-search-plus"></i></button>
+                          {{model.menu_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.parent_menu_code"
+                            name="p_parent_menu_code">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Menu code-->
+
+                  <!--#region Sub Menu code-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule" (click)="btnClearSubMenu()" style="cursor: pointer;" title="Clear">Sub
+                        Menu</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupSubMenu()" data-toggle="modal" data-target="#lookupModalSubMenu"
+                            href="#"><i class="fa fa-search-plus"></i></button>
+                          {{model.sub_menu_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.sub_menu_code"
+                            name="p_sub_menu_code">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Sub Menu code-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                  <!--#region access type-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Access Type</label>
+                      <select class='form-control col-md-6' (change)="AccessType($event)" name="p_role_access"
+                        [ngModel]="model.role_access">
+                        <option value='ALL'>ALL</option>
+                        <option value='ACCESS'>ACCESS</option>
+                        <option value='CREATE/ADD'>CREATE/ADD</option>
+                        <option value='UPDATE'>UPDATE</option>
+                        <option value='DELETE'>DELETE</option>
+                        <option value='APPROVE'>APPROVE</option>
+                        <option value='REJECT'>REJECT</option>
+                        <option value='PRINT'>PRINT</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!--#endregion access type-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#endregion filter-->
+
+                <!--#region list view-->
+                <table id="datatables" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="checkalltable"
+                              [(ngModel)]="selectedAllTable" (change)="selectAllTable();" />
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </th>
+                      <th>Code</th>
+                      <th>Description</th>
+                      <th>Module</th>
+                      <th>Menu</th>
+                      <th>Sub Menu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listrolegroupdetail; let i=index">
+                      <td style="text-align: center;">{{listrolegroupdetail.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              (change)="checkIfAllTableSelected($event, row.notif_code);">
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </td>
+                      <td style="width: 20%;text-align: center;">{{row.role_code}}</td>
+                      <td class="if-no-edit-btn" style="width: 20%;">{{row.role_name}}</td>
+                      <td style="width: 20%;">{{row.module_name}}</td>
+                      <td style="width: 20%;">{{row.menu_name}}</td>
+                      <td style="width: 20%;">{{row.sub_name}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+          <!--#endregion list view-->
+          <div class="card-footer ">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--#region lookup Group Role-->
+  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGroupRole"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" (click)="btnLookupClose()" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+              <!--#region form-->
+              <form #grouproledetailForm="ngForm"
+                (ngSubmit)="onFormSubmit(grouproledetailForm.value, grouproledetailForm.valid)">
+                <!--#region row-->
+                <div class="row">
+                  <!--#region Master Module-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule">Module</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupModule()" data-toggle="modal" data-target="#lookupModalModule" href="#"><i
+                              class="fa fa-search-plus"></i></button>
+                          {{model.module_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.module_code" name="p_module_code">
+                          <input type="hidden" class="form-control" [ngModel]="model.module_name" name="p_module_name">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Master Module-->
+
+                  <!--#region Menu code-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule">Menu</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupMenu()" data-toggle="modal" data-target="#lookupModalMenu" href="#"><i
+                              class="fa fa-search-plus"></i></button>
+                          {{model.menu_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.parent_menu_code"
+                            name="p_parent_menu_code">
+                          <input type="hidden" class="form-control" [ngModel]="model.menu_name" name="p_menu_name">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Menu code-->
+
+                  <!--#region Sub Menu code-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="labelmodule">Sub Menu</label>
+                      <div class="col-md-12">
+                        <span>
+                          <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                            (click)="btnLookupSubMenu()" data-toggle="modal" data-target="#lookupModalSubMenu"
+                            href="#"><i class="fa fa-search-plus"></i></button>
+                          {{model.sub_menu_name}}
+                          <input type="hidden" class="form-control" [ngModel]="model.sub_menu_code"
+                            name="p_sub_menu_code">
+                          <input type="hidden" class="form-control" [ngModel]="model.sub_menu_name"
+                            name="p_sub_menu_name">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion Sub Menu code-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                  <!--#region access type-->
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Access Type</label>
+                      <select class='form-control col-md-6' (change)="AccessType($event)" name="p_role_access"
+                        [ngModel]="model.role_access">
+                        <option value='L'>ALL</option>
+                        <option value='A'>ACCESS</option>
+                        <option value='C'>CREATE?ADD</option>
+                        <option value='U'>UPDATE</option>
+                        <option value='D'>DELETE</option>
+                        <option value='O'>APPROVE</option>
+                        <option value='R'>REJECT</option>
+                        <option value='P'>PRINT</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!--#endregion access type-->
+                </div>
+                <!--#endregion row-->
+              </form>
+              <!--#endregion form-->
+              <!--#region button add //data-role="R0000041U"-->
+              <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" data-role="R00021500022150C">
+                add
+              </button>
+              <!--#endregion button add--->
+              <table id="datatableLookupGroupRole" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th class="disabled-sorting">No</th>
+                    <th class="disabled-sorting">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="checkallLookup"
+                            [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </th>
+                    <th>Code</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupGroupRole;  let i=index">
+                    <td style="text-align: center;">{{lookupGroupRole.numberIndex+i+1}}</td>
+                    <td>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                            (change)="checkIfAllLookupSelected($event, row.role_code, row.name);">
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </td>
+                    <td style="text-align: center;width: 20%;">{{ row.role_code }}</td>
+                    <td class="if-no-edit-btn" style="text-align: left;width: 80%;">{{ row.role_name }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion lookup Group Role-->
+
+  <!--#region lookup Module-->
+  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalModule"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+              <table id="datatableLookupModule" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupModule;  let i=index">
+                    <td style="display: none;"></td>
+                    <td style="text-align: center;">{{lookupModule.numberIndex+i+1}}</td>
+                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                    <td style="width: 80%;text-align: left;">{{ row.module_name }}</td>
+                    <td style="text-align: center;">
+                      <button class="btn btn-outline-default btn-round"
+                        (click)="btnSelectRowModule(row.code, row.module_name)">Select</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion lookup Module-->
+
+  <!--#region lookup Menu-->
+  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMenu"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+              <table id="datatableLookupMenu" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupMenu;  let i=index">
+                    <td style="text-align: center;">{{lookupMenu.numberIndex+i+1}}</td>
+                    <td style="display: none;"></td>
+                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                    <td style="width: 80%;text-align: left;">{{ row.name }}</td>
+                    <td class="text-right">
+                      <button class="btn btn-outline-default btn-round"
+                        (click)="btnSelectRowMenu(row.name, row.code)">Select</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion lookup Menu-->
+
+  <!--#region lookup Sub Menu-->
+  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubMenu"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+              <table id="datatableLookupSubMenu" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupSubMenu;  let i=index">
+                    <td style="display: none;"></td>
+                    <td style="text-align: center;">{{lookupSubMenu.numberIndex+i+1}}</td>
+                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                    <td style="width: 80%;text-align: left;">{{ row.name }}</td>
+                    <td class="text-right">
+                      <button class="btn btn-outline-default btn-round"
+                        (click)="btnSelectRowSubMenu(row.code, row.name)">Select</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion lookup Sub Menu-->

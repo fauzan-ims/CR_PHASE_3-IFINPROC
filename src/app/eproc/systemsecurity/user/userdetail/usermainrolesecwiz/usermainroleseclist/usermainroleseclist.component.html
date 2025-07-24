@@ -1,0 +1,125 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <div class="card"> -->
+      <div class="toolbar">
+        <!--#region button add, delete-->
+        <button class="btn btn-info btn-round" type="button" (click)="btnLookupRole()" data-target="#lookupModalRole"
+          data-toggle="modal" href="#" data-role="R00010420000000C">
+          Add </button>
+        <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00010420001043D">
+          Delete
+        </button>
+        <!--#endregion button add, delete-->
+      </div>
+      <!-- <div class="card-body"> -->
+
+      <!--#region list view-->
+      <table id="datatablesss" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="disabled-sorting">No</th>
+            <th class="disabled-sorting">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="checkalltable" [(ngModel)]="selectedAllTable"
+                    (change)="selectAllTable();" />
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </th>
+            <th>Code</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listmenurolesec;  let i=index">
+            <td style="text-align: center;">{{listmenurolesec.numberIndex+i+1}}</td>
+            <td class="disabled-sorting">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                    (change)="checkIfAllTableSelected($event, row.role_code);">
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </td>
+            <td style="text-align: center;width: 20%;">{{row.role_code}}</td>
+            <td class="if-no-edit-btn" style="text-align: left;width: 80%;">{{row.role_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#endregion list view-->
+    </div>
+  </div>
+</div>
+<!-- </div>
+</div> -->
+
+<!--#region lookup Role-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalRole" style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <!--#region button add-->
+          <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" data-role="R00000190000000C"
+            id="button">
+            add
+          </button>
+          <!--#endregion button add--->
+          <div class="card-body col-md-12">
+            <table id="datatableLookupRole" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Code</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookuprole;  let i=index">
+                  <td style="text-align: center;">{{lookuprole.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.role_code);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="text-align: center;width: 20%;">{{row.role_code}}</td>
+                  <td class="if-no-edit-btn" style="text-align: left;width: 80%;">{{ row.role_name }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Role-->

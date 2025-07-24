@@ -1,0 +1,164 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h5 class="card-title">Parameter Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #parameterdetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(parameterdetailForm.value, parameterdetailForm.valid)">
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00021820002183C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!-- <input type="hidden" name="p_company_code" [ngModel]="this.company_code"> -->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="code" class="control-label">Code *</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" [readonly]="isReadOnly"
+                    required #code="ngModel" maxlength="10">
+                  <small
+                    *ngIf="code.errors?.required && code.touched || (code.errors?.required && parameterdetailForm.submitted) "
+                    class="text-danger">
+                    Code is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="transaction_name" class="control-label">Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.transaction_name" maxlength="250"
+                    name="p_transaction_name" required #transaction_name="ngModel">
+                  <small
+                    *ngIf="transaction_name.errors?.required && transaction_name.touched || (transaction_name.errors?.required && parameterdetailForm.submitted) "
+                    class="text-danger">
+                    Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region module name-->
+              <div class="col-md-4">
+                <label class="control-label labelmodule">Module *</label>
+                <div class="form-group">
+                  <span class="col-md-12 buttons">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md col-md-4" type="button"
+                      (click)="btnLookupModuleCode()" data-target="#lookupModalModuleCode" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.module_name}}</a>
+                    <input type="hidden" name="p_module_code" [ngModel]="model.module_code" required
+                      #module_code="ngModel" />
+                    <input type="hidden" name="p_module_name" [ngModel]="model.module_name" required
+                      #module_name="ngModel" />
+                  </span>
+                </div>
+                <small [hidden]="module_code.valid || (module_code.errors?.required && !parameterdetailForm.submitted)"
+                  class="text-danger">
+                  Module is required
+                </small>
+              </div>
+              <!--#endregion module name-->
+            </div>
+            <!--#endregion row-->
+            <!--#region row-->
+            <div class="row">
+              <!--#region api name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sp_name" class="control-label">Sp Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_name" maxlength="250" name="p_sp_name"
+                    required #sp_name="ngModel">
+                  <small
+                    *ngIf="sp_name.errors?.required && sp_name.touched || (sp_name.errors?.required && parameterdetailForm.submitted) "
+                    class="text-danger">
+                    Sp Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion api name-->
+              
+              <!--#region is_active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_active-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+
+    <!--#region lookup module-->
+    <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalModuleCode"
+      style="margin-top: -65px">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body" style="overflow:hidden;">
+            <div class="col-md-12">
+              <div class="card-body col-md-12">
+                <table id="datatableModuleCode" class="table table-striped table-bordered hover" cellspacing="0"
+                  style="min-width: 100%;">
+                  <thead>
+                    <tr>
+                      <th style="display: none;"></th>
+                      <th class="disabled-sorting">No</th>
+                      <th>Code</th>
+                      <th>Name</th>
+                      <th style="text-align: center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of lookupmodulecode;let i=index ">
+                      <td style="display: none;"></td>
+                      <td style="text-align: center;">{{lookupmodulecode.numberIndex+i+1}}</td>
+                      <td style="text-align: center; width: 20%;">{{ row.code }}</td>
+                      <td style="text-align: left; width: 80%;">{{ row.module_name }}</td>
+                      <td class="text-center">
+                        <button class="btn btn-outline-default btn-round"
+                          (click)="btnSelectRowModule(row.code, row.module_name)">Select</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--#endregion lookup module-->

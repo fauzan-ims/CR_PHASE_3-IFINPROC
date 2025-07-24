@@ -1,0 +1,801 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" [hidden]="this.isWatermark === '0'">
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header">
+          <h5 class="card-title">Supplier Selection Info</h5>
+        </div>
+        <div class="card-body">
+          <!--#region form-->
+          <form #quotationReviewForm="ngForm"
+            (ngSubmit)="onFormSubmit(quotationReviewForm.value, quotationReviewForm.valid)">
+            <!--#region button submit dan back-->
+            <button type="submit" [hidden]="model.status != 'HOLD'" class="btn btn-info btn-round"
+              data-role="R00021570002158C">Save</button>
+            <!-- <button type="button" [hidden]="this.param == null || model.status != 'HOLD' || model.status === 'POST'"
+              class="btn btn-success btn-round" (click)="btnProceed(model.code)" data-role="">Proceed</button> -->
+            <!-- <button type="button"
+              [hidden]="this.param == null || model.status != 'ONPROGRESS' || model.status === 'POST'"
+              class="btn btn-warning btn-round" (click)="btnReturn(model.code)" data-role="R00015290001530R">Return</button> -->
+            <button type="button" [hidden]="model.count_return !== 0 || this.param == null || model.status != 'HOLD'"
+              class="btn btn-success btn-round" (click)="btnPost(model.code)"
+              data-role="R00021570002158R">Proceed</button>
+
+            <button type="button" [hidden]="model.count_return === 0 || this.param == null || model.status != 'HOLD'"
+              class="btn btn-success btn-round custom-button-width" (click)="btnPostLastReturn(model.code)"
+              data-role="R00021570002158R">Proceed</button>
+
+            <button type="button" class="btn btn-success btn-round custom-button-width" data-role="R00021570002158R"
+              [hidden]="model.count_return === 0 || this.param == null || model.status != 'HOLD'"
+              data-target="#lookupModalProceedLastReturn" data-toggle="modal" href="#">Proceed Last Return</button>
+
+            <button type="button" [hidden]="this.param === null || model.status != 'HOLD'"
+              class="btn btn-warning btn-round" (click)="btnCancel()" data-role="R00021580002159R">Cancel</button>
+
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+
+            <button id="btnBelanjaBahanDetail" hidden type="button" class="btn btn-danger btn-round"
+              (click)="this.callGetrow()"></button>
+
+            <button [hidden]="this.param == null || model.status == 'CANCEL'" type="button" style='float: right;'
+              class="btn btn-success btn-round custom-button-width" (click)="btnViewApproval()" data-toggle="modal"
+              data-target="#lookupModalApproval" href="#">
+              View Approval
+            </button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region div-->
+            <div class="row">
+
+              <!--#region code-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Code</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region company_code-->
+              <input type="text" class="form-control" [ngModel]="model.company_code" maxlength="50"
+                name="p_company_code" #company_code="ngModel" hidden>
+              <!--#endregion company_code-->
+
+              <!--#region quotation_code-->
+              <input type="text" class="form-control" [ngModel]="model.quotation_code" maxlength="50"
+                name="p_quotation_code" #quotation_code="ngModel" hidden>
+              <!--#endregion quotation_code-->
+
+              <!--#region branch_code-->
+              <div class="col-md-4">
+                <label class="labelmodule">Branch</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupBranchCode()" data-target="#lookupModalBranchCode" data-toggle="modal"
+                        href="#" [disabled]="this.tampdHidden || param !== null">
+                        <i class="fa fa-search-plus"></i></button> {{model.branch_name}}
+                      <input type="hidden" name="p_branch_code" [ngModel]="model.branch_code" #branch_code="ngModel" />
+                      <input type="hidden" name="p_branch_name" [ngModel]="model.branch_name" #branch_name="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion branch_code-->
+
+              <!--#region status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="status" class="control-label">Status</label>
+                  <input [disabled]="model.status != 'HOLD'" maxlength="20" type="text" class="form-control"
+                    [ngModel]="model.status" name="p_status" readonly>
+                </div>
+              </div>
+              <!--#endregion status-->
+
+              <!--#region selection_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="selection_date" class="control-label">Selection date *</label>
+                  <div>
+                    <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                      [ngModel]="model.selection_date" name="p_selection_date" [options]="myDatePickerOptions" required
+                      #p_selection_date="ngModel" #selection_date="angular-mydatepicker" autocomplete="off"
+                      (click)="selection_date.toggleCalendar()" [ngStyle]="getStyles(true)"
+                      [readonly]="this.tampdHidden || param !== null" />
+                    <small
+                      *ngIf="(p_selection_date.errors?.required && p_selection_date.touched) || (p_selection_date.errors?.required && quotationReviewForm.submitted)"
+                      class="text-danger">
+                      Selection Date is required
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion selection_date-->
+
+              <!--#region division_code-->
+              <div class="col-md-4">
+                <label class="labelmodule">Division</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupDivisionCode()" data-target="#lookupModalDivisionCode" data-toggle="modal"
+                        href="#" [disabled]="this.tampdHidden || param !== null">
+                        <i class="fa fa-search-plus"></i></button> {{model.division_name}}
+                      <input type="hidden" name="p_division_code" [ngModel]="model.division_code" required
+                        #division_code="ngModel" />
+                      <input type="hidden" name="p_division_name" [ngModel]="model.division_name" required
+                        #division_name="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="division_code.errors?.required && division_code.touched || (division_code.errors?.required && quotationReviewForm.submitted)"
+                    class="text-danger">
+                    Division is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion division_code-->
+
+              <!--#region department_code-->
+              <div class="col-md-4">
+                <label class="labelmodule">Department</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupDepartmentCode(this.model.division_code)"
+                        data-target="#lookupModalDepartmentCode" data-toggle="modal" href="#"
+                        [disabled]="this.tampdHidden || param !== null">
+                        <i class="fa fa-search-plus"></i></button> {{model.department_name}}
+                      <input type="hidden" name="p_department_code" [ngModel]="model.department_code" required
+                        #department_code="ngModel" />
+                      <input type="hidden" name="p_department_name" [ngModel]="model.department_name" required
+                        #department_name="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="department_code.errors?.required && department_code.touched || (department_code.errors?.required && quotationReviewForm.submitted)"
+                    class="text-danger">
+                    Department is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion department_code-->
+
+              <!--#region sub_department_code-->
+              <!-- <div class="col-md-4">
+                <label class="labelmodule">Sub Department</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupSubDepartmentCode(this.model.division_code, this.model.department_code)"
+                        data-target="#lookupModalSubDepartmentCode" data-toggle="modal" href="#"
+                        [disabled]="this.tampdHidden || param !== null">
+                        <i class="fa fa-search-plus"></i></button> {{model.sub_department_name}}
+                      <input type="hidden" name="p_sub_department_code" [ngModel]="model.sub_department_code" required
+                        #sub_department_code="ngModel" />
+                      <input type="hidden" name="p_sub_department_name" [ngModel]="model.sub_department_name" required
+                        #sub_department_name="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="sub_department_code.errors?.required && sub_department_code.touched || (sub_department_code.errors?.required && quotationReviewForm.submitted)"
+                    class="text-danger">
+                    Sub Department is required
+                  </small>
+                </div>
+              </div> -->
+              <!--#endregion sub_department_code-->
+
+              <!--#region unit_code-->
+              <!-- <div class="col-md-4">
+                <label class="labelmodule">Unit</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupUnitCode(this.model.division_code, this.model.department_code, this.model.sub_department_code)"
+                        data-target="#lookupModalUnitCode" data-toggle="modal" href="#"
+                        [disabled]="this.tampdHidden || param !== null">
+                        <i class="fa fa-search-plus"></i></button> {{model.unit_name}}
+                      <input type="hidden" name="p_unit_code" [ngModel]="model.unit_code" required
+                        #unit_code="ngModel" />
+                      <input type="hidden" name="p_unit_name" [ngModel]="model.unit_name" required
+                        #unit_name="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="unit_code.errors?.required && unit_code.touched || (unit_code.errors?.required && quotationReviewForm.submitted)"
+                    class="text-danger">
+                    Unit is required
+                  </small>
+                </div>
+              </div> -->
+              <!--#endregion unit_code-->
+
+              <!--#region remark-->
+              <div class="col-md-4">
+                <div class="form-group" [class.has-error]="remark.invalid && remark.touched">
+                  <label for="remark" class="control-label">Remark *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark" maxlength="4000"
+                    required #remark="ngModel" [disabled]="this.tampdHidden"></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && quotationReviewForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion remark-->
+            </div>
+            <!--#endregion div-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="param == null">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item" id="supplierselectionitem">
+                      <a class="nav-link" (click)="supplierselectionitemwiz()" href="#supplierselectionitemwiz"
+                        data-toggle="tab" role="tab" aria-controls="supplierselectionitem" aria-selected="true">
+                        Supplier Selection Item
+                      </a>
+                    </li>
+                    <li class="nav-item" id="supplierselectiondocument">
+                      <a class="nav-link" (click)="supplierselectiondocumentwizlist()"
+                        href="#supplierselectiondocumentwizlist" data-toggle="tab" role="tab"
+                        aria-controls="supplierselectiondocument" aria-selected="true">
+                        Supplier Selection Document
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Vendor-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendor"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupVendor" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupvendor;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupvendor.numberIndex+i+1}}</td>
+                  <!-- <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td> -->
+                  <td style="width: 20%;text-align: center;">{{ row.vendorCode }}</td>
+                  <td style="width: 80%;">{{ row.vendorName }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowVendor(row.vendorCode, row.vendorName, row.address)">Select</button>
+                  </td>
+                  <!-- <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowVendor(row.vendorId, row.vendorName, row.vendorAddr, row.taxIdNo)">Select</button>
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Vendor -->
+
+<!--#region lookup DivisionCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDivisionCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDivisionCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdivisioncode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdivisioncode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDivisionCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup DivisionCode -->
+
+<!--#region lookup DepartmentCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDepartmentCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDepartmentCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdepartmentcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdepartmentcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDepartmentCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup DepartmentCode -->
+
+<!--#region lookup SubDepartmentCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubDepartmentCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSubDepartmentCode" class="table table-striped table-bordered hover"
+              cellspacing="0" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsubdepartmentcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsubdepartmentcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSubDepartmentCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SubDepartmentCode -->
+
+<!--#region lookup UnitCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalUnitCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupUnitCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupunitcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupunitcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowUnitCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup UnitCode -->
+
+<!--#region lookup BranchCode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranchCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBranchCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranchcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbranchcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranchCode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BranchCode -->
+
+<!--#region lookup Vendor 2-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalVendorWithQuotation"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupVendorWithQuotation" class="table table-striped table-bordered hover"
+              cellspacing="0" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>Supplier</th>
+                  <th>Unit Price / Discount</th>
+                  <th>Nett Price</th>
+                  <th>QTY</th>
+                  <th>Offering</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupvendorwithquotation;let i=index ">
+                  <td style="text-align: center;">{{lookupvendorwithquotation.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%;text-align: left;">{{ row.supplier_name }}</td>
+                  <td style="width: 15%;text-align: right;">{{ row.price_amount | number : '1.2-2'}} <br> {{
+                    row.discount_amount | number : '1.2-2'}}</td>
+                  <td style="width: 15%;text-align: right;">{{ row.nett_price | number : '1.2-2'}}</td>
+                  <td style="width: 15%;text-align: center;">{{ row.quantity }}</td>
+                  <td style="width: 35%;text-align: left;">{{ row.offering }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowVendorQuotation(row.supplier_code, row.supplier_name, row.supplier_address, row.supplier_npwp, row.price_amount, row.quantity, row.tax_code, row.tax_name, row.discount_amount
+                      , row.ppn_pct, row.pph_pct, row.unit_available_status, row.indent_days, row.offering)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Vendor 2-->
+
+<!--#region lookup Tax-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalTax" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupTax" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th>PPN (%)</th>
+                  <th>PPH (%)</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupTax;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupTax.numberIndex+i+1}}</td>
+                  <td style="width: 70%;">{{ row.name }}</td>
+                  <td style="width: 15%;">{{ row.ppn_pct | number : '1.6-6'}}</td>
+                  <td style="width: 15%;">{{ row.pph_pct | number : '1.6-6'}}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowTax(row.code, row.name, row.ppn_pct, row.pph_pct)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Tax -->
+
+<!--#region lookup Approval-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalApproval"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupApproval" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Employee</th>
+                  <th>Position</th>
+                  <th>Level</th>
+                  <th>Result</th>
+                  <th>Remark</th>
+                  <!-- <th>To Level</th> -->
+                  <!-- <th>Comment Return</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupapproval;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupapproval.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="width: 25%;text-align: left;">
+                    {{row.emp_name}} {{row.is_mandatory_level}}</td>
+                  <td style="width: 25%;text-align: left;">{{row.emp_position_name}}</td>
+                  <td style="width: 5%;text-align: center;">{{row.approval_level}}</td>
+                  <td style="width: 10%;text-align: center;">
+                    {{row.result_status}}<br>
+                    {{row.result_date}}
+                  </td>
+                  <td style="width: 35%;">{{row.result_remarks}}</td>
+                  <!-- <td style="width: 5%;">{{row.level}}</td> -->
+                  <!-- <td style="width: 5%;">
+                    <input id="level{{i}}" class="form-control" type="text" value="{{row.level}}" name="p_level"
+                      [disabled]="row.approval_level !== 'ENTRY'">
+                  </td> -->
+                  <!-- <td style="width: 25%;">
+                    <textarea id="result_remarks_entry{{i}}" class="form-control" type="text"
+                      value="{{row.result_remarks_entry}}" id="CommentReturn{{i}}"
+                      (change)="CommentReturn($event, row.id)" name="p_result_remarks_entry"
+                      [disabled]="row.approval_level !== 'ENTRY'">
+                    </textarea>
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Approval-->
+
+<!--#region lookup Approve-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalProceedLastReturn"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinnerlookUp">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" (click)="btnLookupClose()" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region form-->
+            <form #ApprovalProcessForm="ngForm">
+              <!-- (ngSubmit)="onFormSubmit(ApprovalProcessForm.value, ApprovalProcessForm.valid)"> -->
+
+              <!--#region button add //data-role="R0000041U"-->
+              <button class="btn btn-info btn-round"
+                (click)="btnApprovalApprove(ApprovalProcessForm.value, ApprovalProcessForm.valid)">
+                SAVE
+              </button>
+              <!--#endregion button add--->
+
+
+              <!--#region id-->
+              <input type="text" class="form-control" [ngModel]="model.id" name="p_id" hidden>
+              <!--#endregion id-->
+
+              <!--#region id-->
+              <input type="text" class="form-control" [ngModel]="model.approval_schedule_id"
+                name="p_approval_schedule_id" hidden>
+              <!--#endregion id-->
+
+              <!--#region service_type-->
+              <!-- <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="p_to_level_approve" class="control-label">Approve To *</label>
+                    <select class="form-control col-md-8" [ngModel]="modelproceed.to_level_approve"
+                      (change)="ToLevelApprove($event)" name="p_to_level_approve" #p_to_level_approve="ngModel">
+                      <option value='NEXT'>NEXT LEVEL</option>
+                      <option value='LAST'>LAST RETURN</option>
+                    </select>
+                  </div>
+                </div> -->
+              <!--#endregion service_type-->
+
+
+              <!--#region row-->
+              <div class="row">
+
+                <!--#region last_remark-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="last_remark" class="control-label">Last Remark</label>
+                    <textarea type="text" class="form-control" [ngModel]="modelproceed.last_remark" name="p_last_remark"
+                      readonly #last_remark="ngModel" maxlength="4000" (change)="CommentReturn($event)"></textarea>
+                  </div>
+                </div>
+                <!--#endregion last_remark-->
+
+                <!--#region result_remarks-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="result_remarks" class="control-label">Remark * </label>
+                    <textarea type="text" class="form-control" [ngModel]="modelproceed.result_remarks"
+                      name="p_result_remarks" #result_remarks="ngModel" required maxlength="4000"></textarea>
+                    <small
+                      *ngIf="(result_remarks.errors?.required && result_remarks.touched) || (result_remarks.errors?.required && ApprovalProcessForm.submitted)"
+                      class="text-danger">
+                      Remark is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion result_remarks-->
+              </div>
+              <!--#endregion row-->
+            </form>
+            <!--#endform-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Approve-->

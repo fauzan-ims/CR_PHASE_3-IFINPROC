@@ -1,0 +1,173 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+      <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card ">
+          <div class="card-header ">
+            <h5 class="card-title">User Info</h5>
+          </div>
+          <div class="card-body ">
+            <!--#region form-->
+            <form #userForm="ngForm" (ngSubmit)="onFormSubmit(userForm.value, userForm.valid)">
+  
+              <!--#region button submit dan back-->
+              <button [hidden]="this.param === null" class="btn btn-info btn-round col-md-4" type="button"
+                (click)="btnActive(model.code)" data-role="R00010690001070C">
+                <span [hidden]="model.is_active === true">Active</span>
+                <span [hidden]="model.is_active === false">Inactive</span>
+              </button>
+              <button [hidden]="model.last_fail_count === 0" class="btn btn-danger btn-round col-md-4" type="button"
+                (click)="btnReset(model.code)" data-role="R00010420001043U">
+                Reset
+              </button>
+              <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+              <!--#endregion button submit dan back-->
+  
+              <!--#region row-->
+              <div class="row">
+  
+                <!--#region upass-->
+                <input type="hidden" class="form-control" [ngModel]="model.upass" name="p_upass" [readonly]="isReadOnly"
+                  required #upass="ngModel">
+                <!--#endregion upass-->
+  
+                <!--#region upass approval-->
+                <input type="hidden" class="form-control" [ngModel]="model.upassapproval" name="p_upassapproval" required
+                  #upassapproval="ngModel">
+                <!--#endregion upass approval-->
+  
+                <!--#region code-->
+                <div class="col-md-4">
+                  <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                    <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                    <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                      Generate-</h1>
+                  </div>
+                  <div [hidden]="model.code == null" class="form-group">
+                    <label>Code *</label>
+                    <input type="text" class="form-control" placeholder="Enter Code" [ngModel]="model.code" name="p_code"
+                      [readonly]="isReadOnly">
+                  </div>
+                </div>
+                <!--#endregion code-->
+  
+                <!--#region name-->
+                <div class="col-md-4">
+                  <div class=" form-group" [class.has-error]="name.invalid && name.touched">
+                    <label for="package_description" class="control-label">Name *</label>
+                    <input type="text" class="form-control" [ngModel]="model.name" name="p_name" #name="ngModel" readonly>
+                    <small *ngIf="(name.errors?.required && name.touched) || (name.errors?.required && userForm.submitted)" class="text-danger">
+                      Name is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion name-->
+  
+                <!--#region last login date-->
+                <div class="col-md-4">
+                  <div class="form-group" >
+                    <label for="last_login_date">Last Login Time</label>
+                    <input id="last_login_date" type="text" class="form-control col-md-6 datepicker"
+                      [ngModel]="model.last_login_date" name="p_last_login_date" #last_login_date="ngModel" readonly>
+                  </div>
+                </div>
+                <!--#endregion last login date-->
+              </div>
+              <!--#endregion row-->
+  
+              <!--#region row-->
+              <div class="row">
+                <!--#region check box is active-->
+                <div class="col-md-4">
+                  <div class="form-check mt-4" style="margin-left: -25px;">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input disabled class="form-check-input" type="checkbox" [ngModel]="model.is_active"
+                          name="p_is_active">
+                        Active
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!--#endregion check box is active-->
+  
+                <!--#region last fail count-->
+                <div class="col-md-4">
+                  <div class="form-group" >
+                    <label for="last_fail_count">Last Fail Count *</label>
+                    <div class="col-md-4" style="margin-left: -15px;">
+                      <input type="text" class="form-control" [ngModel]="model.last_fail_count" name="p_last_fail_count"
+                        #last_fail_count="ngModel" pattern={{NumberOnlyPattern}} readonly>
+                    </div>
+                  </div>
+                </div>
+                <!--#endregion last_fail_count-->
+  
+                <!--#region next change pass-->
+                <div class="col-md-4">
+                  <div class="form-group" >
+                    <label for="next_change_pass">Next Change Password </label>
+                    <input type="date" class="form-control col-md-6" [ngModel]="model.next_change_pass | date:'y-MM-dd'"
+                      name="p_next_change_pass" #next_change_pass="ngModel" readonly>
+                    <small *ngIf="(next_change_pass.errors?.required && next_change_pass.touched) || (next_change_pass.errors?.required && userForm.submitted)" class="text-danger">
+                      Next change Password is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion next change pass-->
+              </div>
+              <!--#endregion row-->
+            </form>
+            <!--#endregion form-->
+          </div>
+  
+          <!--#region wizard-->
+          <div class="wizard-custom-margin" [hidden]="param == null">
+            <!--#region wizard container -->
+            <div class="wizard-container">
+              <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+                id="wizardProfile">
+                <div class="text-center">
+                  <div class="wizard-navigation">
+                    <ul>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="groupseclistwiz()" href="#groupseclist" data-toggle="tab" role="tab"
+                          aria-controls="groupseclist" aria-selected="true">
+                          Group
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="roleseclistwiz()" href="#roleseclist" data-toggle="tab" role="tab"
+                          aria-controls="roleseclist" aria-selected="true">
+                          Role
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="loginloglistwiz()" href="#loginloglist" data-toggle="tab" role="tab"
+                          aria-controls="loginloglist" aria-selected="true">
+                          Login Log
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="reportlistwiz()" href="#reportlist" data-toggle="tab" role="tab"
+                          aria-controls="reportlist" aria-selected="true">
+                          Report
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--endregion wizard-->
+          <router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>

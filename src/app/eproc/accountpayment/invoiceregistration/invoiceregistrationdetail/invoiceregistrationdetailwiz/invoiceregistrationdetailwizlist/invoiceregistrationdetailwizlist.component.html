@@ -1,0 +1,159 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <div class="toolbar">
+
+                    <!--#region button delete-->
+                    <!-- <button class="btn btn-info btn-round" (click)="btnLookupReceipt()" data-role="R00015860001587C"
+                        data-target="#lookupModalReceipt" data-toggle="modal" href="#" [hidden]="this.tampHidden">
+                        Add
+                    </button> -->
+                    <button class="btn btn-info btn-round" (click)="btnLookupReceipt()"
+                        data-target="#lookupModalReceipt" data-role="R00021610022161C" data-toggle="modal" href="#"
+                        [hidden]="this.tampHidden">
+                        Add
+                    </button>
+                    <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00021610002162D"
+                        [hidden]="this.tampHidden">
+                        Delete
+                    </button>
+                    <!--#endregion button delete-->
+                    <button hidden id="reloadWiz" type="button" (click)="callGetrowHeader()"></button>
+
+                </div>
+
+                <!--#region list view-->
+                <table id="datatablesWizItem" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                            [(ngModel)]="selectedAll" (change)="selectAll()" name="selectAll" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th>GRN Code/ Item</th>
+                            <th>PO No</th>
+                            <th>QTY GRN/Post/Outstanding</th>
+                            <th>QTY Invoice</th>
+                            <th>Plat/ Engine/ Chasis/ Faktur </th>
+                            <th>Unit Price/ Discount Amount (Unit) / Nett Amount</th>
+                            <th>PPN /PPH / Total Amount</th>
+                            <th>Spesification</th>
+                            <th style="text-align: center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of invoiceRegisterDetailList;let i = index">
+                            <td style="text-align: center">{{ invoiceRegisterDetailList.numberIndex + i + 1 }}</td>
+                            <td class="disabled-sorting">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            name="selected" (change)="checkIfAllTableSelected($event, row.id)" />
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td style="text-align: left; width: 10%"> {{ row.grn_code }} <br> {{ row.item_name}}</td>
+                            <td style="text-align: left; width: 10%"> {{ row.po_code}} </td>
+                            <td style="text-align: left; width: 10%"> {{ row.qty_grn}} <br> {{ row.qty_post}} <br> {{
+                                row.qty_outstanding}}</td>
+                            <td style="text-align: center; width: 10%"> {{ row.qty_invoice}} <br> {{ row.uom_name}}</td>
+                            <td style="text-align: left; width: 15%">{{ row.info_detail }}
+                            <td style="text-align: right; width: 20%">{{ row.purchase_amount | number : '1.2-2'}} <br>
+                                {{ row.discount | number : '1.2-2'}} <br> {{ row.nett_amount | number : '1.2-2'}}</td>
+                            <td style="text-align: right; width: 15%">{{ row.ppn | number : '1.2-2'}} <br> {{ row.pph |
+                                number : '1.2-2'}} <br> {{ row.total_amount | number : '1.2-2'}}</td>
+                            <td style="text-align: left; width: 10%">{{ row.spesification }}
+                            <td style="text-align: center">
+                                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                    (click)="btnEdit(row.id)"><i class="fa fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalReceipt"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden; padding: 10px;">
+                <div class="col-md-12">
+                    <!--#region button add-->
+                    <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+                        Add
+                    </button>
+                    <!--#endregion button add--->
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupReceipt" class="table table-striped table-bordered hover"
+                            cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th class="disabled-sorting">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" id="checkallLookup"
+                                                    [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>Code</th>
+                                    <th>Item</th>
+                                    <th>PO Code</th>
+                                    <th>Plat/Engine/Chassis No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupreceipt; let i=index">
+                                    <td style="text-align: center;">{{lookupreceipt.numberIndex+i+1}}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="row.selectedLookup"
+                                                    (change)="checkIfAllLookupSelected($event, row.code);">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="if-no-edit-btn" style="width: 15%;text-align: left;">{{
+                                        row.code}}</td>
+                                    <td class="if-no-edit-btn" style="width: 30%;text-align: left;">{{
+                                        row.item_name}}</td>
+                                    <td class="if-no-edit-btn" style="width: 15%;text-align: left;">{{
+                                        row.po_code}}</td>
+                                    <td style="text-align: left; width: 25%"> {{ row.plat_no}} <br> {{ row.engine_no}}
+                                        <br> {{ row.chassis_no}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

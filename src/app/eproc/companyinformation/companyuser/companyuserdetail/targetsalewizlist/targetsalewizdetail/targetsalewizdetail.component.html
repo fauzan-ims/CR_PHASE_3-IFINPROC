@@ -1,0 +1,112 @@
+<div class="main-content" class="main-content margin-wizard-content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- <div class="card "> -->
+            <div class="card-body ">
+                <!--#region form-->
+                <form #targetsaledetailForm="ngForm"
+                    (ngSubmit)="onFormSubmit(targetsaledetailForm.value, targetsaledetailForm.valid)">
+                    <!--#region button submit, button back-->
+                    <button type="submit" class="btn btn-info btn-round" [hidden]="model.is_default === '1'"
+                        data-role="R00021510002152C">Save</button>
+                    <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                    <!--#endregion button submit, button back-->
+
+                    <!--#region class="row"-->
+                    <div class="row">
+                        <input type="text" [ngModel]="model.is_default" name="p_is_default" hidden>
+
+                        <!--#region company_code-->
+                        <input type="hidden" class="form-control" [ngModel]="model.company_code" name="p_company_code"
+                            #company_code="ngModel">
+                        <!--#endregion company_code-->
+
+                        <!--#region id-->
+                        <input type="hidden" [ngModel]="this.params" name="p_id" #id="ngModel">
+                        <!--#endregion id-->
+
+                        <!--#region user_code-->
+                        <input type="hidden" [ngModel]="this.param" name="p_user_code" #user_code="ngModel">
+                        <!--#endregion user_code-->
+
+                        <!--#region start_date-->
+                        <div class="col-md-4">
+                            <div class="form-group col-md-8" style="margin-left: -15px;">
+                                <label for="start_date" class="control-label">Start Date *</label>
+                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                    [ngModel]="model.start_date" name="p_start_date" [options]="myDatePickerOptions"
+                                    (click)="start_date.toggleCalendar()" #p_start_date="ngModel" [readonly]="isDefault"
+                                    #start_date="angular-mydatepicker" autocomplete="off" required />
+                            </div>
+                            <small
+                                *ngIf="(p_start_date.errors?.required && p_start_date.touched) || (p_start_date.errors?.required && targetsaledetailForm.submitted)"
+                                class="text-danger">
+                                Start Date is required
+                            </small>
+                        </div>
+                        <!--#endregion start_date-->
+
+                        <!--#region end_date-->
+                        <div class="col-md-4">
+                            <div class="form-group col-md-8" style="margin-left: -15px;">
+                                <label for="end_date" class="control-label">End Date *</label>
+                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                    [ngModel]="model.end_date" name="p_end_date" [options]="myDatePickerOptions"
+                                    (click)="end_date.toggleCalendar()" #p_end_date="ngModel" [readonly]="isDefault"
+                                    #end_date="angular-mydatepicker" autocomplete="off" required />
+                            </div>
+                            <small
+                                *ngIf="(p_end_date.errors?.required && p_end_date.touched) || (p_end_date.errors?.required && targetsaledetailForm.submitted)"
+                                class="text-danger">
+                                End Date is required
+                            </small>
+                        </div>
+                        <!--#endregion end_date-->
+
+                        <!--#region target_sales_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="target_sales_amount" class="control-label">
+                                    Target Sale Amount *</label>
+                                <div class="col-md-6" style="margin-left: -15px;">
+                                    <input type="text" class="form-control" style="text-align: right;" required
+                                        [ngModel]="model.target_sales_amount | number : '1.2-2'" [readonly]="isDefault"
+                                        amount="target_sales_amount" name="p_target_sales_amount"
+                                        #target_sales_amount="ngModel">
+                                </div>
+                                <small
+                                    *ngIf="(target_sales_amount.errors?.required && target_sales_amount.touched) || (target_sales_amount.errors?.required && targetsaledetailForm.submitted)"
+                                    class="text-danger">
+                                    Target Sale Amount is required
+                                </small>
+                                <small *ngIf="target_sales_amount.errors?.pattern && target_sales_amount.touched"
+                                    class="text-danger">
+                                    Target Sale Amount is required and format should be <i>0-9</i>
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion target_sales_amount-->
+
+                        <!--#region is_active-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_active"
+                                            name="p_is_active" #is_active="ngModel" [disabled]="isDefault">
+                                        Active
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_active-->
+                    </div>
+                    <!--#endregion class="row"-->
+                </form>
+                <!--#endregion form-->
+            </div>
+
+        </div>
+    </div>
+</div>
