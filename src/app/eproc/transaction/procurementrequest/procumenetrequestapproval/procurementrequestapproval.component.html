@@ -441,6 +441,7 @@
                     <th>FA Code/ Plat No</th>
                     <th>Quantity Request</th>
                     <th>UOM</th>
+                    <th>Condition</th>
                     <th>Specification</th>
                     <th>Remark</th>
                   </tr>
@@ -450,10 +451,11 @@
                     <td style="text-align: center;">{{listrequestitem.numberIndex+i+1}}</td>
                     <td style="display: none;">
                     </td>
-                    <td style="width: 15%;">{{row.item_name}}</td>
-                    <td style="width: 15%;">{{row.fa_code}} <br> {{row.plat_no}}</td>
+                    <td style="width: 10%;">{{row.item_name}}</td>
+                    <td style="width: 10%;">{{row.fa_code}} <br> {{row.plat_no}}</td>
                     <td style="width: 10%; text-align: right">{{row.quantity_request}}</td>
                     <td style="width: 10%; text-align: center">{{row.uom_name}}</td>
+                    <td style="width: 10%;">{{row.condition}}</td>
                     <td style="width: 20%;">{{row.specification}}</td>
                     <td style="width: 20%;">{{row.remark}}</td>
                   </tr>
