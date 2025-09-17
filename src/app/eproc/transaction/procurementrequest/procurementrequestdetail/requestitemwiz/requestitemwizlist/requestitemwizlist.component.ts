@@ -21,15 +21,15 @@ export class RequestitemwizComponent extends BaseComponent implements OnInit {
   public listrequestitem: any = [];
   public tampHiddenStatus: Boolean = false;
   private dataTamp: any = [];
+  private dataRoleTamp: any = [];
   private dataTampPush: any = [];
-
   private APIController: String = 'ProcurementRequestItem';
   private APIControllerHeader: String = 'ProcurementRequest';
-
   private APIRouteForGetRows: String = 'GetRows';
   private APIRouteForGetDelete: String = 'Delete';
   private APIRouteForGetRow: String = 'GETROW';
-  private RoleAccessCode = 'R00021520000000A';
+  private APIRouteForGetRole: String = 'ExecSpForGetRole';
+  private RoleAccessCode = 'R00013070000000A';
 
   // checklist
   public selectedAll: any;

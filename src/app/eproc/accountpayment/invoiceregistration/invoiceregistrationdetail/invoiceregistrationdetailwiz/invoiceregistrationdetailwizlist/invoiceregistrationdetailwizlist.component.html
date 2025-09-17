@@ -58,11 +58,13 @@
                     <tbody>
                         <tr *ngFor="let row of invoiceRegisterDetailList;let i = index">
                             <td style="text-align: center">{{ invoiceRegisterDetailList.numberIndex + i + 1 }}</td>
-                            <td class="disabled-sorting">
+                            <td class="disabled-sorting if-no-edit-btn">
                                 <div class="form-check">
                                     <label class="form-check-label">
+                                        <!-- <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                                            name="selected" (change)="checkIfAllTableSelected($event, row.id)" /> -->
                                         <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
-                                            name="selected" (change)="checkIfAllTableSelected($event, row.id)" />
+                                            (change)="checkIfAllTableSelected($event, row.id)" />
                                         <span class="form-check-sign"></span>
                                     </label>
                                 </div>
