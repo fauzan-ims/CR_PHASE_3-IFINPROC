@@ -143,9 +143,8 @@ export class InvoiceRegistrationDetailWizListComponent extends BaseComponent imp
     this.checkedList = [];
     for (let i = 0; i < this.invoiceRegisterDetailList.length; i++) {
       if (this.invoiceRegisterDetailList[i].selected) {
-        this.checkedList.push({
-          'ID': this.invoiceRegisterDetailList[i].id,
-        })
+        // this.checkedList.push({'ID': this.invoiceRegisterDetailList[i].id,})
+        this.checkedList.push(this.invoiceRegisterDetailList[i].id,)
       }
     }
     // jika tidak di checklist
@@ -157,55 +156,76 @@ export class InvoiceRegistrationDetailWizListComponent extends BaseComponent imp
       }).catch(swal.noop)
       return
     }
-
+    this.dataTampPush = [];
     swal({
-      title: 'Are you sure?',
+      allowOutsideClick: false,
+      title: 'Warning!',
+      text: 'Are You Sure To Delete Data?',
+      html: 'Are You Sure To Delete Data? <br><br> Deleting The Data Will Update Field Unit Price, PPN Amount, PPH Amount And Total Amount Back To Value In GRN',
       type: 'warning',
       showCancelButton: true,
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
-      confirmButtonText: this._deleteconf,
+      confirmButtonText: 'Yes',
       buttonsStyling: false
     }).then((result) => {
       this.showSpinner = true;
       if (result.value) {
-        this.dataTampPush = [];
+        for (let J = 0; J < this.checkedList.length; J++) {
+        // this.dataTampPush = [];
 
         let th = this;
         var i = 0;
-        (function loopPoProceesProceed() {
-          if (i < th.checkedList.length) {
-            th.dataTampPush = [{
-              'p_id': th.checkedList[i].ID,
-              'action': '',
-            }];
+        // (function loopPoProceesProceed() {
+        //   if (i < th.checkedList.length) {
+        //     th.dataTampPush = [{
+        //       'p_id': th.checkedList[i].ID,
+        //       'action': '',
+        //     }];
+          this.dataTampPush.push({
+            'p_id': this.checkedList[J],
+            'action': '',
+          });
             th.dalservice.ExecSp(th.dataTampPush, th.APIController, th.APIRouteForGetDelete)
+              // .subscribe(
+              //   res => {
+              //     const parse = JSON.parse(res);
+              //     if (parse.result === 1) {
+              //       if (th.checkedList.length == i + 1) {
+              //         th.showNotification('bottom', 'right', 'success');
+              //         $('#datatablesWizItem').DataTable().ajax.reload();
+              //         $('#btnInvoiceRegisration').click();
+              //         th.showSpinner = false;
+              //       } else {
+              //         i++;
+              //         // loopPoProceesProceed();
+              //       }
+              //     } else {
+              //       th.swalPopUpMsg(parse.data);
+              //       th.showSpinner = false;
+              //     }
+              //   },
+              //   error => {
+              //     const parse = JSON.parse(error);
+              //     th.swalPopUpMsg(parse.data);
+              //     th.showSpinner = false;
+              //   });
               .subscribe(
-                res => {
-                  const parse = JSON.parse(res);
-                  if (parse.result === 1) {
-                    if (th.checkedList.length == i + 1) {
-                      th.showNotification('bottom', 'right', 'success');
-                      $('#datatablesWizItem').DataTable().ajax.reload();
-                      $('#btnInvoiceRegisration').click();
-                      th.showSpinner = false;
-                    } else {
-                      i++;
-                      loopPoProceesProceed();
-                    }
-                  } else {
-                    th.swalPopUpMsg(parse.data);
-                    th.showSpinner = false;
-                  }
-                },
-                error => {
-                  const parse = JSON.parse(error);
-                  th.swalPopUpMsg(parse.data);
-                  th.showSpinner = false;
-                });
-          }
+              res => {
+                if (this.checkedList.length == J + 1) {
+                  $('#clientDetail', parent.document).click();
+                  this.showSpinner = false;
+                  this.showNotification('bottom', 'right', 'success');
+                  $('#datatablesWizItem').DataTable().ajax.reload();
+                }
+              },
+              error => {
+                const parse = JSON.parse(error);
+                this.swalPopUpMsg(parse.data);
+              });
+          } 
 
-        })();
+        // })();
 
         // for (let J = 0; J < this.checkedList.length; J++) {
         //   // param tambahan untuk getrow dynamic
